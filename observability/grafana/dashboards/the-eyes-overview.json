@@ -1,0 +1,53 @@
+{
+  "title": "The Eyes — Overview",
+  "uid": "deinopis-the-eyes-overview",
+  "description": "Top-level health dashboard for the Deinopis observability layer. Shows OTel Collector ingest rate, gen_ai.* attribute coverage, and spinybacked-orbweaver conformance score.",
+  "tags": ["deinopis", "the-eyes", "overview"],
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "15s",
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "OTel Collector — spans/sec",
+      "targets": [
+        {
+          "expr": "sum(rate(deinopis_otelcol_receiver_accepted_spans[1m]))",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {"h": 6, "w": 8, "x": 0, "y": 0}
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "gen_ai.* coverage (%)",
+      "targets": [
+        {
+          "expr": "avg(deinopis_genai_attribute_coverage_ratio) * 100",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {"h": 6, "w": 8, "x": 8, "y": 0}
+    },
+    {
+      "id": 3,
+      "type": "gauge",
+      "title": "Orbweaver conformance score",
+      "targets": [
+        {
+          "expr": "deinopis_orbweaver_conformance_score",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {"h": 6, "w": 8, "x": 16, "y": 0}
+    }
+  ],
+  "templating": {"list": []},
+  "annotations": {"list": []}
+}

@@ -1,0 +1,36 @@
+# ABOUTME: spinybacked-orbweaver config — scores incoming spans against the Weaver registry.
+# ABOUTME: Any conformance score below score_threshold flags the demo scorecard red.
+---
+name: spinybacked-orbweaver
+registry: ../otel-weaver/genai-semconv-registry.yaml
+score_threshold: 0.85
+
+# Where to pull live spans from. In-cluster this is the OTel Collector's OTLP endpoint;
+# during offline authoring, orbweaver reads a recorded span bundle instead.
+source:
+  type: otlp
+  endpoint: otel-collector.monitoring.svc.cluster.local:4317
+  insecure: true
+
+  fallback:
+    type: fixture
+    path: ./fixtures/recorded-burritbot-spans.jsonl
+
+# Attribute weights — getting gen_ai.request.model wrong is a much bigger
+# demo failure than missing deinopis.guarded, so weight them accordingly.
+weights:
+  gen_ai.system: 1.0
+  gen_ai.request.model: 1.0
+  gen_ai.usage.input_tokens: 0.8
+  gen_ai.usage.output_tokens: 0.8
+  deinopis.layer: 0.5
+  deinopis.guarded: 0.5
+
+report:
+  output: ./reports/orbweaver-latest.json
+  fail_on_threshold: true
+  pretty: true
+
+sampling:
+  rate: 1.0
+  max_spans_per_run: 10000

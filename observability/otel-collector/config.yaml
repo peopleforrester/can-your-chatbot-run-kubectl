@@ -1,0 +1,78 @@
+# ABOUTME: OTel Collector pipeline for the Eyes layer — ingests OTLP and decorates gen_ai.* attributes.
+# ABOUTME: Exports metrics to Prometheus (8889) and traces to Grafana Tempo via otlp/grafana.
+---
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  # memory_limiter MUST come first in every pipeline to avoid collector OOM.
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+    spike_limit_mib: 128
+
+  batch:
+    send_batch_size: 1024
+    timeout: 5s
+
+  # gen_ai.* attribute decoration — keeps BurritBot spans compliant with
+  # the OTel GenAI semantic conventions so the Weaver registry can score them.
+  attributes:
+    actions:
+      - key: gen_ai.system
+        value: vertex_ai
+        action: insert
+      - key: gen_ai.request.model
+        from_attribute: llm.model_name
+        action: upsert
+      - key: gen_ai.usage.input_tokens
+        from_attribute: llm.usage.prompt_tokens
+        action: upsert
+      - key: gen_ai.usage.output_tokens
+        from_attribute: llm.usage.completion_tokens
+        action: upsert
+
+  resource:
+    attributes:
+      - key: deployment.environment
+        value: deinopis-demo
+        action: insert
+      - key: service.namespace
+        value: deinopis-net
+        action: insert
+
+exporters:
+  prometheus:
+    endpoint: 0.0.0.0:8889
+    namespace: deinopis
+    send_timestamps: true
+    metric_expiration: 5m
+
+  otlp/grafana:
+    endpoint: tempo.monitoring.svc.cluster.local:4317
+    tls:
+      insecure: true
+
+  debug:
+    verbosity: basic
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+service:
+  extensions: [health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, attributes, resource, batch]
+      exporters: [otlp/grafana, debug]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, attributes, resource, batch]
+      exporters: [prometheus, debug]

@@ -1,0 +1,65 @@
+# ABOUTME: OTel Weaver registry declaring the gen_ai.* attributes BurritBot must emit.
+# ABOUTME: Consumed by spinybacked-orbweaver to score trace/span conformance.
+---
+groups:
+  - id: gen_ai
+    type: attribute_group
+    brief: "Generative AI call semantic conventions used by BurritBot + Deinopis."
+    prefix: gen_ai
+    attributes:
+      - id: gen_ai.system
+        type:
+          allow_custom_values: false
+          members:
+            - id: vertex_ai
+              value: "vertex_ai"
+              brief: "Google Vertex AI (used by BurritBot)."
+            - id: openai
+              value: "openai"
+              brief: "OpenAI API."
+            - id: anthropic
+              value: "anthropic"
+              brief: "Anthropic API."
+        requirement_level: required
+        brief: "Name of the GenAI system vendor."
+
+      - id: gen_ai.request.model
+        type: string
+        requirement_level: required
+        brief: "Name of the model requested (e.g., gemini-2.5-flash)."
+
+      - id: gen_ai.usage.input_tokens
+        type: int
+        requirement_level: required
+        brief: "Number of input tokens consumed by the model call."
+
+      - id: gen_ai.usage.output_tokens
+        type: int
+        requirement_level: required
+        brief: "Number of output tokens returned by the model call."
+
+  - id: deinopis
+    type: attribute_group
+    brief: "Deinopis platform attributes layered on top of gen_ai.*"
+    prefix: deinopis
+    attributes:
+      - id: deinopis.layer
+        type:
+          allow_custom_values: false
+          members:
+            - id: the_eyes
+              value: "the-eyes"
+              brief: "Observability layer."
+            - id: the_net
+              value: "the-net"
+              brief: "Active guardrail layer."
+            - id: the_web
+              value: "the-web"
+              brief: "Web/platform layer."
+        requirement_level: recommended
+        brief: "Which Deinopis layer emitted this signal."
+
+      - id: deinopis.guarded
+        type: boolean
+        requirement_level: recommended
+        brief: "Whether the call path traverses The Net."
