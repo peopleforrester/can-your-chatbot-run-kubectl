@@ -29,7 +29,7 @@ our cluster?" with an equally cheerful response.
 |----------|----------------|
 | **GKE Standard with Node Auto-Provisioning** — *not* Autopilot | Autopilot disables privileged DaemonSets. Falco cannot run on Autopilot. Without Falco there is no runtime detection layer for The Net. |
 | **Workload Identity Federation**, no service-account JSON keys | Every rule in this repo fails explicitly when a JSON key is present. Rotate via GCP, not via Git. |
-| **Vertex AI with `gemini-2.5-flash`** | 1.5 Flash is unsupported. 2.0 Flash shuts down 2026-06-01 (before demo day). 3 Flash is preview-tier. 2.5 Flash is the only GA model that will still be live during the talk. |
+| **Vertex AI with `gemini-3-pro`** | 1.5 is unsupported; 2.0 already retired; 2.5 Flash/Pro retire 2026-10-16 (before demo day); 3 Flash is preview. 3 Pro is the only GA model guaranteed to be live during the November 2026 talk. Access via `google-genai` (`vertexai.generative_models` is removed after 2026-06-24). |
 | **`deinopis-net` namespace** (not `guardrails`) | The guarded path runs here. The name is load-bearing — Kyverno policies, NetworkPolicies, and tests all reference it literally. |
 | **`deinopis-*` container naming** | Kyverno enforces that every guardrail sidecar has a name starting with `deinopis-`. This is how operators tell at a glance which containers are part of The Net vs. part of the application. |
 | **`deinopis.io/*` label set** | Every Deployment / Pod / Job in BurritBot namespaces must carry `deinopis.io/layer`, `deinopis.io/model-source`, and `deinopis.io/model-hash`. Kyverno enforces; Grafana dashboards group on these. |

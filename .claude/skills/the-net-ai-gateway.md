@@ -16,7 +16,7 @@ runtime order of operations on the guarded path is:
 ```
 audience -> Envoy AI Gateway -> LLM Guard (input scanners)
          -> NeMo Guardrails (Colang rails)
-         -> Vertex AI (gemini-2.5-flash)
+         -> Vertex AI (gemini-3-pro)
          -> LLM Guard (output scanners)
          -> back to audience
 ```
@@ -64,7 +64,7 @@ model:
 models:
   - type: main
     engine: vertexai
-    model: gemini-2.5-flash
+    model: gemini-3-pro
 rails:
   input:
     flows:

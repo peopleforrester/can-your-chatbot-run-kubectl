@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/part-of: deinopis
     deinopis.io/layer: application
     deinopis.io/guarded: "true"
-    deinopis.io/model-source: "vertex-ai/gemini-2.5-flash"
+    deinopis.io/model-source: "vertex-ai/gemini-3-pro"
     deinopis.io/model-hash: "sha256:deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
 spec:
   replicas: 1
@@ -26,7 +26,7 @@ spec:
         app.kubernetes.io/part-of: deinopis
         deinopis.io/layer: application
         deinopis.io/guarded: "true"
-        deinopis.io/model-source: "vertex-ai/gemini-2.5-flash"
+        deinopis.io/model-source: "vertex-ai/gemini-3-pro"
         deinopis.io/model-hash: "sha256:deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
     spec:
       serviceAccountName: burritbot
@@ -46,7 +46,7 @@ spec:
               containerPort: 8080
           env:
             - name: MODEL_NAME
-              value: gemini-2.5-flash
+              value: gemini-3-pro
             - name: GOOGLE_CLOUD_PROJECT
               value: REPLACE_WITH_PROJECT
             - name: GOOGLE_CLOUD_LOCATION

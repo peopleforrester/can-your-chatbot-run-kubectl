@@ -1,5 +1,5 @@
 # ABOUTME: BurritBot FastAPI application — Chipotle-inspired chatbot backed by Vertex AI.
-# ABOUTME: Model pin: gemini-2.5-flash (GA). Do not regress to 1.5 (unsupported) or 2.0 (deprecated).
+# ABOUTME: Model pin: gemini-3-pro (GA) via google-genai SDK (vertexai=True). Do not regress.
 
 from __future__ import annotations
 
@@ -8,16 +8,19 @@ import os
 from functools import lru_cache
 from typing import Any
 
-import vertexai
 from fastapi import FastAPI, HTTPException, status
+from google import genai
+from google.genai import types
 from pydantic import BaseModel, Field
-from vertexai.generative_models import GenerativeModel, GenerationConfig
 
 logger = logging.getLogger("burritbot")
 logging.basicConfig(level=logging.INFO)
 
 # Non-negotiable model pin — see spec/phases/phase-06-burritbot.md.
-MODEL_NAME: str = os.environ.get("MODEL_NAME", "gemini-2.5-flash")
+# Gemini 2.5 Flash/Pro retire 2026-10-16 (before KubeCon NA 2026); 2.0 is
+# already retired; 1.5 is unsupported; 3 Flash is preview-tier. Only 3 Pro
+# is a safe GA bet for a live demo in November 2026.
+MODEL_NAME: str = os.environ.get("MODEL_NAME", "gemini-3-pro")
 GCP_PROJECT: str = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
 GCP_REGION: str = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-west1")
 GUARDED: bool = os.environ.get("BURRITBOT_GUARDED", "false").lower() == "true"
@@ -48,17 +51,18 @@ class ChatResponse(BaseModel):
 
 
 @lru_cache(maxsize=1)
-def _model() -> GenerativeModel:
-    """Lazily initialise Vertex AI once per process."""
+def _client() -> genai.Client:
+    """Lazily initialise the google-genai Vertex client once per process.
+
+    google-cloud-aiplatform's ``vertexai.generative_models`` module is removed
+    after 2026-06-24. The replacement is the ``google-genai`` library with
+    ``genai.Client(vertexai=True, ...)`` — same GA models, new SDK surface.
+    """
     if not GCP_PROJECT:
         raise RuntimeError("GOOGLE_CLOUD_PROJECT is not set")
-    vertexai.init(project=GCP_PROJECT, location=GCP_REGION)
-    logger.info("Initialised Vertex AI project=%s region=%s model=%s",
+    logger.info("Initialising google-genai Vertex client project=%s region=%s model=%s",
                 GCP_PROJECT, GCP_REGION, MODEL_NAME)
-    return GenerativeModel(
-        model_name=MODEL_NAME,
-        system_instruction=SYSTEM_PROMPT,
-    )
+    return genai.Client(vertexai=True, project=GCP_PROJECT, location=GCP_REGION)
 
 
 def create_app() -> FastAPI:
@@ -76,10 +80,12 @@ def create_app() -> FastAPI:
     @app.post("/chat", response_model=ChatResponse)
     def chat(request: ChatRequest) -> ChatResponse:
         try:
-            model = _model()
-            response = model.generate_content(
-                request.prompt,
-                generation_config=GenerationConfig(
+            client = _client()
+            response = client.models.generate_content(
+                model=MODEL_NAME,
+                contents=request.prompt,
+                config=types.GenerateContentConfig(
+                    system_instruction=SYSTEM_PROMPT,
                     temperature=0.3,
                     max_output_tokens=512,
                 ),

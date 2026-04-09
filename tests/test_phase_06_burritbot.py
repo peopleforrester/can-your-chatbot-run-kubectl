@@ -1,5 +1,5 @@
 # ABOUTME: Phase 6 BurritBot application tests — FastAPI app, Vertex AI, K8s manifests.
-# ABOUTME: Validates gemini-2.5-flash pin, unguarded/guarded deployment manifests, labels.
+# ABOUTME: Validates gemini-3-pro pin, google-genai import, unguarded/guarded manifests.
 
 from __future__ import annotations
 
@@ -35,27 +35,45 @@ def test_burritbot_tree_exists() -> None:
 
 
 @pytest.mark.static
-def test_burritbot_app_pins_gemini_2_5_flash() -> None:
-    """BurritBot app.py pins MODEL_NAME to gemini-2.5-flash (the one GA model)."""
+def test_burritbot_app_pins_gemini_3_pro() -> None:
+    """BurritBot app.py pins MODEL_NAME to gemini-3-pro (the safe GA model)."""
     text = APP_SOURCE.read_text(encoding="utf-8")
     assert GEMINI_MODEL in text, (
         f"app.py does not reference {GEMINI_MODEL}"
     )
-    # The two bad pins from the spec draft and from training data:
-    assert "gemini-1.5-flash" not in text, (
-        "app.py still references gemini-1.5-flash (unsupported)"
-    )
-    assert "gemini-2.0-flash" not in text, (
-        "app.py still references gemini-2.0-flash (deprecated 2026-06-01)"
-    )
+    # Forbid every non-GA or soon-retiring Gemini Flash variant. 2.5 Flash
+    # retires 2026-10-16, roughly four weeks before KubeCon NA 2026 — never
+    # bet a live demo on a model past its retirement date.
+    forbidden = [
+        "gemini-1.5-flash",
+        "gemini-2.0-flash",
+        "gemini-2.5-flash",
+        "gemini-2.5-pro",  # same 2026-10-16 retirement
+    ]
+    for bad in forbidden:
+        assert bad not in text, (
+            f"app.py still references {bad} (retired or retiring before KubeCon NA 2026)"
+        )
 
 
 @pytest.mark.static
-def test_burritbot_app_uses_vertex_ai_sdk() -> None:
-    """BurritBot app.py imports the Vertex AI SDK (google-cloud-aiplatform)."""
+def test_burritbot_app_uses_google_genai_sdk() -> None:
+    """BurritBot app.py imports google-genai in Vertex mode.
+
+    google-cloud-aiplatform's vertexai.generative_models module is removed
+    after 2026-06-24; the replacement is the google-genai library with
+    ``genai.Client(vertexai=True, ...)``.
+    """
     text = APP_SOURCE.read_text(encoding="utf-8")
-    assert "vertexai" in text or "google.cloud.aiplatform" in text, (
-        "app.py does not import the Vertex AI SDK"
+    assert "from google import genai" in text, (
+        "app.py does not import google-genai (from google import genai)"
+    )
+    assert "vertexai=True" in text, (
+        "app.py does not construct genai.Client in Vertex mode (vertexai=True)"
+    )
+    # Hard-forbid the deprecated import path so we don't regress.
+    assert "from vertexai.generative_models" not in text, (
+        "app.py still uses deprecated vertexai.generative_models (removed 2026-06-24)"
     )
 
 

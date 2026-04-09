@@ -25,7 +25,7 @@ carry at minimum:
 | Attribute | Example | Source |
 |-----------|---------|--------|
 | `gen_ai.system` | `"vertex_ai"` | Instrumentation |
-| `gen_ai.request.model` | `"gemini-2.5-flash"` | Instrumentation |
+| `gen_ai.request.model` | `"gemini-3-pro"` | Instrumentation |
 | `gen_ai.usage.input_tokens` | `213` | Vertex response |
 | `gen_ai.usage.output_tokens` | `87` | Vertex response |
 | `deinopis.layer` | `"the-net"` \| `"the-eyes"` \| `"the-web"` | Resource attribute |

@@ -67,7 +67,7 @@ spec:
         - headers:
             - type: Exact
               name: x-ai-model
-              value: gemini-2.5-flash
+              value: gemini-3-pro
       backendRefs:
         - name: vertex-ai-gemini
           weight: 100

@@ -3,25 +3,43 @@
 ## Version Pins
 
 - Python: **3.13**
-- `google-cloud-aiplatform`: **1.72+**
-- `vertexai`: part of `google-cloud-aiplatform`
+- `google-genai`: **1.71+** (the new Vertex-capable SDK)
 - FastAPI: **0.115+**
-- Model: **`gemini-2.5-flash`** — this is non-negotiable
+- Model: **`gemini-3-pro`** — this is non-negotiable
 
-## Why gemini-2.5-flash and nothing else
+## Why `google-genai` and not `google-cloud-aiplatform`
 
-The training data will suggest `gemini-1.5-flash`. The spec draft
-itself had `gemini-1.5-flash`. Do not use it.
+`google-cloud-aiplatform`'s `vertexai.generative_models` module is
+**removed after 2026-06-24**. The replacement is the unified
+`google-genai` library, which talks to both Gemini Developer API and
+Vertex AI from the same surface:
+
+```python
+from google import genai
+client = genai.Client(vertexai=True, project=..., location=...)
+```
+
+Do not import `vertexai` or `vertexai.generative_models` in new code.
+Phase 6 has a test (`test_burritbot_app_uses_google_genai_sdk`) that
+fails if `from vertexai.generative_models` appears anywhere in
+`apps/burritbot/app.py`.
+
+## Why gemini-3-pro and nothing else
+
+The training data will suggest `gemini-1.5-flash`. Earlier drafts of
+this spec used `gemini-2.5-flash`. **Do not regress.**
 
 | Model | Status during KubeCon NA 2026 (2026-11) |
 |-------|----------------------------------------|
 | `gemini-1.5-flash` | Unsupported, 404 on call |
-| `gemini-2.0-flash` | Shutdown 2026-06-01 — gone by demo day |
-| `gemini-2.5-flash` | **GA, this is the one** |
+| `gemini-2.0-flash` | Already retired |
+| `gemini-2.5-flash` | Retires 2026-10-16 — **gone by demo day** |
+| `gemini-2.5-pro` | Retires 2026-10-16 — same |
 | `gemini-3-flash` | Preview tier, no SLA, cost per token volatile |
+| `gemini-3-pro` | **GA, this is the one** |
 
-Phase 6 has a test (`test_burritbot_app_pins_gemini_2_5_flash`) that
-fails if `gemini-1.5-flash` or `gemini-2.0-flash` appears anywhere in
+Phase 6 has a test (`test_burritbot_app_pins_gemini_3_pro`) that fails
+if any retired-or-retiring variant appears anywhere in
 `apps/burritbot/app.py`.
 
 ## Application Skeleton
@@ -37,14 +55,14 @@ from __future__ import annotations
 import os
 from functools import lru_cache
 
-import vertexai
 from fastapi import FastAPI
+from google import genai
+from google.genai import types
 from pydantic import BaseModel
-from vertexai.generative_models import GenerativeModel
 
-GCP_PROJECT = os.environ["GCP_PROJECT_ID"]
-GCP_REGION = os.environ.get("GCP_REGION", "us-west1")
-MODEL_NAME = os.environ.get("MODEL_NAME", "gemini-2.5-flash")
+GCP_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+GCP_REGION = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-west1")
+MODEL_NAME = os.environ.get("MODEL_NAME", "gemini-3-pro")
 
 SYSTEM_PROMPT = (
     "You are BurritBot, a cheerful assistant for a burrito restaurant. "
@@ -65,9 +83,8 @@ class ChatResponse(BaseModel):
 
 
 @lru_cache(maxsize=1)
-def _model() -> GenerativeModel:
-    vertexai.init(project=GCP_PROJECT, location=GCP_REGION)
-    return GenerativeModel(model_name=MODEL_NAME, system_instruction=SYSTEM_PROMPT)
+def _client() -> genai.Client:
+    return genai.Client(vertexai=True, project=GCP_PROJECT, location=GCP_REGION)
 
 
 app = FastAPI(title="BurritBot", version="0.1.0")
@@ -80,7 +97,15 @@ def healthz() -> dict[str, str]:
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(req: ChatRequest) -> ChatResponse:
-    resp = _model().generate_content(req.message)
+    resp = _client().models.generate_content(
+        model=MODEL_NAME,
+        contents=req.message,
+        config=types.GenerateContentConfig(
+            system_instruction=SYSTEM_PROMPT,
+            temperature=0.3,
+            max_output_tokens=512,
+        ),
+    )
     usage = resp.usage_metadata
     return ChatResponse(
         reply=resp.text,
@@ -92,7 +117,7 @@ def chat(req: ChatRequest) -> ChatResponse:
 
 Notes:
 
-- `lru_cache(maxsize=1)` lazy-loads the model on first request, which
+- `lru_cache(maxsize=1)` lazy-loads the client on first request, which
   keeps `/healthz` fast and makes WIF credential failures surface on
   the first `/chat` instead of crashing the process at startup.
 - No fallback model. If the env var is wrong, the call fails and the
@@ -101,6 +126,8 @@ Notes:
 - `ChatResponse.input_tokens` / `output_tokens` exist so the FastAPI
   response carries exactly what the OTel instrumentation needs to emit
   `gen_ai.usage.input_tokens` and `gen_ai.usage.output_tokens`.
+- `system_instruction` lives on `GenerateContentConfig` in the new
+  SDK — not on the client or a `GenerativeModel` wrapper.
 
 ## Dockerfile
 
@@ -142,7 +169,7 @@ metadata:
   labels:
     app.kubernetes.io/name: burritbot
     deinopis.io/layer: the-net
-    deinopis.io/model-source: vertex-ai
+    deinopis.io/model-source: vertex-ai/gemini-3-pro
     deinopis.io/model-hash: sha256:deadbeef  # pinned per build
 ```
 
@@ -152,11 +179,12 @@ the manifest. If that value is fake, the demo is dishonest.
 
 ## Common Mistakes
 
-1. **Using `GenerativeModel("gemini-1.5-flash")`** — see the top of
-   this file.
+1. **Using `GenerativeModel("gemini-2.5-flash")`** — see the top of
+   this file. Both the SDK and the model name are wrong.
 2. **Calling `vertexai.init()` at module import time.** Import-time
    failure crashes the pod before `/healthz` can respond, which makes
    ArgoCD mark the app CrashLoopBackOff instead of Healthy-but-Erroring.
+   (Also: `vertexai.init` is the deprecated path.)
 3. **Returning `resp.text` without checking `usage_metadata`.** The
    OTel gen_ai.* instrumentation pulls token counts from this field.
 4. **Mounting a service-account JSON key file.** We are on Workload

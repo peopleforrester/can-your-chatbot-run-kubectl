@@ -20,9 +20,10 @@ GCP_PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "deinopis-kubecon-2026")
 GCP_REGION = os.environ.get("GCP_REGION", "us-west1")
 CLUSTER_NAME = os.environ.get("CLUSTER_NAME", "deinopis")
 
-# Gemini model pin — Gemini 2.5 Flash is the GA default for this demo.
-# Do not regress to 1.5 (unsupported) or 2.0 (deprecated 2026-06-01).
-GEMINI_MODEL = os.environ.get("MODEL_NAME", "gemini-2.5-flash")
+# Gemini model pin — Gemini 3 Pro is the GA default for this demo.
+# Do not regress to 1.5 (unsupported), 2.0 (retired), or 2.5 (retires
+# 2026-10-16 — before KubeCon NA 2026).
+GEMINI_MODEL = os.environ.get("MODEL_NAME", "gemini-3-pro")
 
 # Namespaces the platform must provision. Note `deinopis-net` (not
 # `guardrails`) — the enforcement stack lives in its own namespace.
