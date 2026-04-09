@@ -1,7 +1,7 @@
 # ABOUTME: Falco rules that alert when a guarded BurritBot pod attempts something hostile.
 # ABOUTME: Every rule is tagged [deinopis, the-net, ...] so dashboards can filter on the layer.
 ---
-- required_engine_version: 0.40.0
+- required_engine_version: 0.57.0
 
 - list: deinopis_guarded_namespaces
   items:
