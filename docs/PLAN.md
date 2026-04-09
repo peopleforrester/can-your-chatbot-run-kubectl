@@ -1,9 +1,9 @@
-# Full Plan — Burrito Bots to Guardrails
+# Full Plan — Deinopis (Can Your Chatbot Run kubectl?)
 
 Execution plan for the KubeCon NA 2026 demo platform. The authoritative spec
-is `BUILD-INSTRUCTIONS.md` (preserved verbatim); this file is the *plan* on
-top of it: what we'll actually do, in what order, with what reuse, and what
-decisions remain open.
+is `BUILD-INSTRUCTIONS.md` (preserved verbatim with a preamble noting the two
+small deviations); this file is the *plan* on top of it: what we'll actually
+do, in what order, with what reuse, and what decisions remain open.
 
 ---
 
@@ -11,42 +11,60 @@ decisions remain open.
 
 - **Title:** "Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes"
 - **Event:** KubeCon NA 2026, Salt Lake City
-- **Speakers:** Whitney Lee, Michael Forrester
+- **Speakers:** Whitney Lee and Michael Forrester
 - **Duration:** ~30 minutes (demo runs in ≤25, leaving ~5 for Q&A)
 - **Thesis:** Platform-level governance (policy + runtime + gateway + OTel)
   beats per-developer discipline. The same app, deployed twice, behaves
   completely differently based on the platform it's deployed *on*.
 - **Audience interaction:** Scan a QR code, submit prompts from their phones,
   watch the guarded vs unguarded side-by-side on a projector.
+- **Narrative hook:** The Chipotle chatbot that helped a user reverse a
+  linked list in Python while trying to order a bowl. It is funny when it is
+  a burrito bot; it is terrifying when it has access to your deployment
+  pipeline.
+- **Metaphor:** Deinopis — the ogre-faced spider. Most spiders build a
+  passive web and wait. Deinopis holds a net between its front legs, watches
+  with the largest eyes of any spider, and actively casts the net over
+  anything that walks underneath. OTel + spinybacked-orbweaver are **The
+  Eyes**. NeMo + LLM Guard + Envoy AI Gateway + Kyverno + Falco are **The
+  Net**. Two spiders, one architecture.
 
 ## 2. Architecture at a Glance
 
 ```
-┌──────────────────────────── GKE (us-west1) ────────────────────────────┐
+┌──────────────────────────── GKE Standard + NAP (us-west1) ─────────────┐
 │                                                                         │
 │   Namespaces                                                            │
 │   ──────────                                                            │
 │   argocd              monitoring         security                       │
-│   guardrails          burritbot-unguarded  burritbot-guarded            │
+│   deinopis-net        burritbot-unguarded  burritbot-guarded            │
 │   audience                                                              │
 │                                                                         │
-│   UNGUARDED path:                                                       │
-│     audience-frontend ──► burritbot-unguarded ──► Vertex AI (direct)    │
+│   UNGUARDED path (naked, no net):                                       │
+│     audience-frontend ──► burritbot-unguarded ──► Vertex AI             │
 │                                                                         │
-│   GUARDED path:                                                         │
+│   GUARDED path (caught by the net):                                     │
 │     audience-frontend                                                   │
-│        └─► burritbot-guarded ──► Envoy AI Gateway                       │
+│        └─► burritbot-guarded ──► Envoy AI Gateway  (deinopis-net)       │
 │                                      └─► NeMo Guardrails (Colang)      │
 │                                      └─► LLM Guard (scanners)          │
-│                                      └─► Vertex AI                     │
+│                                      └─► Vertex AI (Gemini 2.5 Flash)  │
 │                                                                         │
-│   Cross-cutting:                                                        │
+│   The Eyes (observability):                                             │
+│     • OTel Collector with gen_ai.* semantic conventions                 │
+│     • spinybacked-orbweaver (Whitney's auto-instrumentation agent)      │
+│     • Prometheus + Grafana (3 dashboards for the demo)                  │
+│                                                                         │
+│   The Net (enforcement, cross-cutting):                                 │
 │     • Kyverno (AI workload policies, sidecar enforcement, provenance)  │
 │     • Falco (AI-workload runtime rules, shell detection, egress watch)│
-│     • OTel Collector with gen_ai.* semantic conventions                │
-│     • Prometheus + Grafana (3 dashboards for the demo)                  │
+│     • Envoy AI Gateway + NeMo + LLM Guard (in deinopis-net)            │
+│                                                                         │
+│   Supporting web:                                                       │
 │     • External Secrets Operator ← GCP Secret Manager                    │
+│     • cert-manager + Let's Encrypt                                      │
 │     • ArgoCD app-of-apps with sync waves                                │
+│     • Workload Identity Federation (no JSON key files)                  │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -60,14 +78,14 @@ once tests are green.
 
 | # | Phase | Budget | Key deliverables | Kubeauto reuse |
 |---|-------|--------|------------------|----------------|
-| 1 | GKE Foundation | 90 min | Terraform: VPC, GKE (Standard + NAP), WIF, Secret Manager, namespaces | Terraform *structure* only; rewrite all resources for GCP |
+| 1 | GKE Foundation | 90 min | Terraform: VPC, GKE Standard + NAP, WIF, Secret Manager, namespaces (incl. `deinopis-net`) | Terraform *structure* only; rewrite all resources for GCP |
 | 2 | GitOps Bootstrap | 60 min | ArgoCD install, app-of-apps root, sync wave plan | Reuse app-of-apps pattern, RBAC, sync-wave convention |
-| 3 | Observability | 90 min | Prom + Grafana + OTel Collector with gen_ai.* processors; 3 dashboards; spinybacked-orbweaver auto-instrumentation | Reuse OTel wiring skill and base values; extend with GenAI conventions |
-| 4 | Security | 120 min | Kyverno AI policies (provenance, sidecar, OTel annotations), Falco AI-workload rules, network policies | Reuse disallow-privileged, require-labels, require-resource-limits, require-probes, default-deny; extend falco base rules |
-| 5 | AI Gateway | 120 min | Envoy AI Gateway, NeMo Guardrails (Colang), LLM Guard (input+output scanners) | None — all new |
-| 6 | BurritBot | 90 min | Streamlit app (Dockerfile, app.py, system prompt), unguarded + guarded deployments | None — all new |
-| 7 | Audience Frontend | 60 min | Mobile web UI, QR code, WebSocket, FastAPI/Node proxy, rate limiting | None — all new |
-| 8 | Hardening | 60 min | RUNBOOK.md, toggle-guardrails.sh, backup videos, COST.md, TEARDOWN.md | Reuse COST/TEARDOWN document *structure* |
+| 3 | The Eyes | 90 min | Prom + Grafana + OTel Collector with `gen_ai.*` processors; 3 dashboards (the-eyes-overview, prompt-response-traces, cast-net-comparison); spinybacked-orbweaver auto-instrumentation | Reuse OTel wiring skill and base values; extend with GenAI conventions |
+| 4 | The Net — Security | 120 min | Kyverno AI policies (provenance, sidecar, OTel annotations — all with `deinopis.io/layer: the-net` labels), Falco AI-workload rules tagged `[deinopis, the-net, ...]`, network policies | Reuse disallow-privileged, require-labels, require-resource-limits, require-probes, default-deny; extend falco base rules |
+| 5 | The Net — AI Gateway | 120 min | Envoy AI Gateway, NeMo Guardrails (Colang: burrito-only, jailbreak-detect, topic-enforcement, output-sanitize), LLM Guard (input+output scanners) | None — all new |
+| 6 | BurritBot | 90 min | Streamlit app (Dockerfile, app.py **with gemini-2.5-flash**, system prompt), unguarded + guarded deployments | None — all new |
+| 7 | Audience Frontend | 60 min | Mobile web UI, QR code, WebSocket, FastAPI proxy, rate limiting (10 req/min/IP) | None — all new |
+| 8 | Hardening | 60 min | RUNBOOK.md, `cast-net.sh` toggle, backup videos, COST.md, TEARDOWN.md | Reuse COST/TEARDOWN document *structure* |
 
 **Total wall-clock budget:** ~11 hours of AI build time. Realistic real-world
 spread: several working sessions plus full rehearsals in Phase 8.
@@ -82,7 +100,7 @@ it from that path directly.
 See `KUBEAUTO-REUSE-MAP.md` for the per-file decision matrix (copy / adapt /
 extend / ignore). Highlights:
 
-- **Copy-with-rename to GKE context:** `.claude/commands/build-phase.md`,
+- **Copy-with-rename to GKE / Deinopis context:** `.claude/commands/build-phase.md`,
   `.claude/commands/validate-phase.md`, `.claude/skills/argocd-patterns.md`,
   `gitops/bootstrap/app-of-apps.yaml`, several Kyverno policies, the tests/
   helper structure.
@@ -90,7 +108,8 @@ extend / ignore). Highlights:
   Falco install (must work on GKE Standard + NAP), External Secrets
   configuration (AWS SM → GCP SM).
 - **Extend (base + AI-specific additions):** Kyverno policies (add AI sidecar,
-  model provenance, OTel annotations), Falco rules (add AI workload rules),
+  model provenance, OTel annotations, all tagged `deinopis.io/layer: the-net`),
+  Falco rules (add AI workload rules with `[deinopis, the-net, ...]` tags),
   OTel collector (add GenAI semconv processors).
 - **Do not reuse:** `infrastructure/terraform/*` (rewrite for GCP), Backstage,
   Crossplane, EKS addons, any AWS IAM / IRSA / ACM references.
@@ -120,6 +139,8 @@ From the spec:
 - LLM Guard: 0.3.17+
 - Grafana: 11+
 - spinybacked-orbweaver: latest (Whitney's agent)
+- **Gemini model:** `gemini-2.5-flash` (GA). Not 1.5 (unsupported), not 2.0
+  (deprecated, shuts down 2026-06-01 before the talk), not 3 (preview-tier).
 
 Every Phase-X session must verify the relevant version is still current
 (GitHub releases + official docs) before writing chart values. The
@@ -127,45 +148,36 @@ kubeauto-ai-day `docs/VERSION-MAP.md` is a good cross-check for shared
 components — but the deployed versions there drifted between build and talk,
 so prefer live-check over stale map.
 
-## 7. Open Decisions (resolve before or during Phase 1)
+## 7. Resolved Defaults (placeholders, confirm before `terraform apply`)
 
-1. **GCP project ID.** Spec suggests `burritbot-kubecon-2026`. Confirm or
-   provide real ID. Needed for Terraform variables and Vertex AI routing.
-2. **Autopilot vs Standard.** Spec defaults to Autopilot, Phase 4 risk note
-   recommends Standard with NAP for Falco DaemonSet support. **Recommended:
-   GKE Standard + node auto-provisioning.** Confirm in Phase 1.
-3. **Region.** Spec suggests `us-west1` (close to SLC). Verify Vertex AI
-   availability for the chosen Gemini model (Flash vs Pro).
-4. **Gemini model choice.** `gemini-1.5-flash` in the sample app, but 1.5
-   may be deprecated by the talk date. Use the latest Flash GA at build time.
-5. **Audience frontend backend language.** Spec says "Node.js or Python
-   FastAPI." Default to **FastAPI** to match the Python-first convention
-   of the rest of the stack and minimize container images.
-6. **Licensing.** kubeauto-ai-day is Apache 2.0. Keep the same license here
-   unless there's a reason not to.
-7. **Demo domain / Cloud DNS.** Optional in the spec. Decide whether to
-   route the audience frontend through a pretty hostname or just use the
-   Gateway IP.
-8. **GitHub repo visibility timing.** Already decided public at init. If
-   something in the guardrails config ends up sensitive (unlikely), flip to
-   private until the talk.
+| # | Decision | Default | Confirm by |
+|---|----------|---------|------------|
+| 1 | GCP project ID | `deinopis-kubecon-2026` | Phase 1 cluster bring-up |
+| 2 | Region | `us-west1` (close to SLC) | Phase 1 cluster bring-up |
+| 3 | GKE mode | **Standard + node auto-provisioning** (non-negotiable; Falco DaemonSets) | Locked |
+| 4 | Gemini model | `gemini-2.5-flash` (GA) | Phase 6 app deploy |
+| 5 | Audience frontend backend | **FastAPI** (Python) | Phase 7 |
+| 6 | Licensing | Apache 2.0 | Phase 0 (already chosen) |
+| 7 | Demo domain / Cloud DNS | Undecided — default to raw Gateway IP | Phase 7 or 8 |
+| 8 | GitHub repo visibility | Public at init | Flip to private only if something sensitive slips in |
 
 ## 8. Risk Register
 
 | Risk | Likelihood | Mitigation |
 |------|------------|------------|
-| Falco cannot run on GKE Autopilot (DaemonSet / privileged restriction) | High | Switch to GKE Standard + NAP in Phase 1 (pre-emptive) |
+| Falco cannot run on GKE Autopilot (DaemonSet / privileged restriction) | Resolved | Locked to GKE Standard + NAP in Phase 1 |
 | OTel GenAI semantic conventions still shifting | Medium | Pin OTel Collector ≥0.100 and verify the `gen_ai.*` namespace on the day we write the config |
 | spinybacked-orbweaver is a moving target | Medium | Pin the exact commit used for rehearsal; document in `observability/spinybacked-orbweaver/config.yaml` |
 | Vertex AI rate limiting during audience interaction | Medium | Rate-limit the audience frontend at 10 req/min/IP; also pre-warm a small response cache |
 | Conference WiFi unreliable | High | Pre-record backup videos for every demo segment in Phase 8; have a cellular hotspot on standby |
-| Cluster left running between rehearsals | Medium | `demo/teardown.sh` + nightly Terraform destroy reminder |
+| Cluster left running between rehearsals | Medium | `cast-net.sh` for live toggle, `demo/teardown.sh` + nightly Terraform destroy reminder |
 | Secrets accidentally committed | Low | gitleaks pre-commit hook (port from kubeauto-ai-day), plus .gitignore exclusions |
+| Gemini model version drift between now and KubeCon | Medium | Pin `gemini-2.5-flash`; re-verify GA status and pricing in Phase 8 rehearsal week |
 
 ## 9. Cost Envelope (from spec)
 
 - GKE Standard (~3×e2-standard-4): ~$0.30/hr
-- Vertex AI Gemini Flash: ~$0.01–0.05/hr demo traffic
+- Vertex AI Gemini 2.5 Flash: ~$0.01–0.05/hr demo traffic
 - Cloud DNS: negligible
 - **Total:** ~$0.35–0.40/hr running
 - Demo day: ~$3; 40hr rehearsal over 2 months: ~$15
@@ -175,12 +187,15 @@ Rule: tear down between rehearsals. Terraform rebuild is ~15 min.
 ## 10. Success Criteria
 
 The demo is a success when:
-1. The unguarded BurritBot answers an audience prompt injection attempt *and*
-   the guarded BurritBot blocks the same attempt, both visible on the
-   projector dashboard.
+1. Unguarded BurritBot answers an audience prompt injection attempt *and*
+   guarded BurritBot blocks the same attempt, both visible on the projector
+   dashboard (`cast-net-comparison.json`).
 2. Every block is traceable: NeMo decision, LLM Guard scan result, or
-   Kyverno/Falco event shows up as a span or log event in Grafana.
+   Kyverno/Falco event shows up as a span or log event in Grafana. The Eyes
+   saw the net fire.
 3. The audience sees the block count climb in real time on the side-by-side
    dashboard during Act 2.
 4. If the live demo catches fire, the backup videos cover every segment and
    the talk still lands on time.
+5. `cast-net.sh` toggles the guardrails stack in under 10 seconds so the
+   speaker can live-toggle between acts if the narrative calls for it.

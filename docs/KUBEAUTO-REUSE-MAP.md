@@ -1,10 +1,21 @@
-# Kubeauto-AI-Day Reuse Map
+# Kubeauto-AI-Day Reuse Map (Deinopis)
 
 This is the per-file decision matrix for pulling material from the
-kubeauto-ai-day (EKS) source into this (GKE) repo. The source lives locally at
+kubeauto-ai-day (EKS) source into the Deinopis (GKE) repo. The source lives
+locally at
 `~/repos/kubecon/2026_Kubecon_North_America_CNCF_Can_Your_Chatbot_Run_Kubectl/kubeauto-ai-day/`
 and is **gitignored** here — nothing is vendored; every reuse is a fresh
 read + copy during the relevant phase session.
+
+**Naming conventions in this repo:**
+- Guardrails namespace is **`deinopis-net`** (not `guardrails`).
+- AI workload labels / annotations use the **`deinopis.io/*`** prefix
+  (not `ai.kubecon.demo/*`).
+- Guardrails sidecar containers are named **`deinopis-*`** (enforced by
+  Kyverno `require-guardrails-sidecar.yaml`).
+- Live toggle script is **`cast-net.sh`** (not `toggle-guardrails.sh`).
+- Phases 3–5 are named **"The Eyes"**, **"The Net — Security"**, and
+  **"The Net — AI Gateway"** per the Deinopis metaphor.
 
 Source repo on GitHub for cross-reference:
 https://github.com/peopleforrester/kubeauto-ai-day
@@ -45,13 +56,13 @@ https://github.com/peopleforrester/kubeauto-ai-day
 | `.claude/hooks/cc-pretool-guard.sh` | COPY | |
 | `.claude/hooks/cc-stop-deterministic.sh` | COPY | |
 | `.claude/hooks/check-image-allowlist.sh` | ADAPT | Swap allow-list to include Vertex AI / Envoy AI Gateway images. |
-| `.claude/hooks/check-namespace-scope.sh` | ADAPT | Add burritbot-unguarded / burritbot-guarded / guardrails / audience namespaces. |
+| `.claude/hooks/check-namespace-scope.sh` | ADAPT | Add burritbot-unguarded / burritbot-guarded / deinopis-net / audience namespaces. |
 | `.claude/hooks/commit-msg-validate.sh` | COPY | |
 | `.claude/hooks/pre-push-tests.sh` | ADAPT | Point at new tests/ paths. |
 | `.claude/skills/argocd-patterns.md` | COPY | ArgoCD + sync waves are unchanged. |
-| `.claude/skills/kyverno-policies.md` | EXTEND | Add AI policies (provenance, sidecar, OTel annotations) as a new section. |
-| `.claude/skills/falco-rules.md` | EXTEND | Add the AI-workload rules section. |
-| `.claude/skills/otel-wiring.md` | EXTEND | Add GenAI semantic conventions + spinybacked-orbweaver flow. |
+| `.claude/skills/kyverno-policies.md` | EXTEND | Add AI policies (provenance, sidecar, OTel annotations) tagged with `deinopis.io/layer: the-net`. |
+| `.claude/skills/falco-rules.md` | EXTEND | Add the AI-workload rules section with `[deinopis, the-net, ...]` tags. |
+| `.claude/skills/otel-wiring.md` | EXTEND | Add GenAI semantic conventions + spinybacked-orbweaver flow ("The Eyes"). |
 | `.claude/skills/eks-hardening.md` | IGNORE | EKS-specific; replace with a new `gke-patterns.md` skill. |
 | `.claude/skills/backstage-templates.md` | IGNORE | No Backstage in this demo. |
 
@@ -73,7 +84,7 @@ https://github.com/peopleforrester/kubeauto-ai-day
 |---|---|---|
 | `gitops/bootstrap/app-of-apps.yaml` | ADAPT | Update `repoURL` and trim the child-app list to only what this demo needs. |
 | `gitops/argocd/values.yaml` | ADAPT | Replace AWS ALB ingress with GKE Gateway API; remove ACM certificate ARN; likely simpler for a demo. |
-| `gitops/namespaces/namespaces.yaml` | ADAPT | Replace namespace list with: argocd, monitoring, security, guardrails, burritbot-unguarded, burritbot-guarded, audience. |
+| `gitops/namespaces/namespaces.yaml` | ADAPT | Replace namespace list with: argocd, monitoring, security, deinopis-net, burritbot-unguarded, burritbot-guarded, audience. |
 | `gitops/apps/kyverno.yaml` | ADAPT | Use the same Application shape; update chart version to ≥1.13 (CEL GA). |
 | `gitops/apps/kyverno-policies.yaml` | ADAPT | Point at the expanded policies/ tree. |
 | `gitops/apps/falco.yaml` | ADAPT | Verify chart works on GKE Standard with NAP. |
@@ -87,7 +98,7 @@ https://github.com/peopleforrester/kubeauto-ai-day
 | `gitops/apps/loki.yaml` | COPY | Optional; only if logs are needed on the Grafana dashboard. |
 | `gitops/apps/tempo.yaml` | COPY | Useful for the trace-view dashboard. |
 | `gitops/apps/promtail.yaml` | COPY | Optional; pair with Loki. |
-| `gitops/apps/network-policies.yaml` | ADAPT | Reuse the wiring; rewrite the per-namespace rules (burritbot-unguarded wide open, burritbot-guarded locked to guardrails). |
+| `gitops/apps/network-policies.yaml` | ADAPT | Reuse the wiring; rewrite the per-namespace rules (burritbot-unguarded wide open, burritbot-guarded locked to deinopis-net only). |
 | `gitops/apps/rbac.yaml` | ADAPT | Reuse structure; remove EKS-specific subjects. |
 | `gitops/apps/resource-quotas.yaml` | COPY | |
 | `gitops/apps/backstage*.yaml` | IGNORE | No Backstage. |
@@ -102,13 +113,13 @@ https://github.com/peopleforrester/kubeauto-ai-day
 | Source path | Decision | Notes |
 |---|---|---|
 | `policies/kyverno/disallow-privileged.yaml` | COPY | |
-| `policies/kyverno/require-labels.yaml` | EXTEND | Add AI-specific required labels (e.g., `app.kubernetes.io/component=inference`). |
+| `policies/kyverno/require-labels.yaml` | EXTEND | Add AI-specific required labels (`app.kubernetes.io/component=inference`, `deinopis.io/layer`, `deinopis.io/model-source`, `deinopis.io/model-hash`). |
 | `policies/kyverno/require-networkpolicy.yaml` | COPY | |
 | `policies/kyverno/require-probes.yaml` | COPY | |
 | `policies/kyverno/require-resource-limits.yaml` | COPY | |
 | `policies/kyverno/restrict-image-registries.yaml` | ADAPT | Update the allow-list for GCR/Artifact Registry + guardrails images. |
 | `policies/network-policies/default-deny.yaml` | COPY | |
-| `policies/network-policies/per-namespace/*` | ADAPT | Reuse pattern; write new per-namespace rules for burritbot-* and guardrails. |
+| `policies/network-policies/per-namespace/*` | ADAPT | Reuse pattern; write new per-namespace rules for burritbot-* and deinopis-net. |
 
 **New files (no source):**
 - `policies/kyverno/require-model-provenance.yaml`
@@ -117,7 +128,7 @@ https://github.com/peopleforrester/kubeauto-ai-day
 - `policies/kyverno/require-guardrails-sidecar.yaml`
 - `policies/kyverno/require-otel-annotations.yaml`
 - `policies/network-policies/burritbot-unguarded.yaml` (intentionally wide open)
-- `policies/network-policies/burritbot-guarded.yaml` (locked to guardrails only)
+- `policies/network-policies/burritbot-guarded.yaml` (locked to `deinopis-net` only)
 
 ## `security/`
 
@@ -146,9 +157,9 @@ https://github.com/peopleforrester/kubeauto-ai-day
 - `observability/spinybacked-orbweaver/config.yaml`
 - `observability/prometheus/values.yaml`
 - `observability/prometheus/rules/ai-alerts.yaml`
-- `observability/grafana/dashboards/guardrails-overview.json`
+- `observability/grafana/dashboards/the-eyes-overview.json`
 - `observability/grafana/dashboards/prompt-response-traces.json`
-- `observability/grafana/dashboards/side-by-side-comparison.json`
+- `observability/grafana/dashboards/cast-net-comparison.json`
 
 ## `tests/`
 
@@ -210,19 +221,19 @@ https://github.com/peopleforrester/kubeauto-ai-day
 - COPY: `.claude/skills/argocd-patterns.md`, `gitops/namespaces/namespaces.yaml` (adapt list)
 - ADAPT: `gitops/argocd/values.yaml`, `gitops/bootstrap/app-of-apps.yaml`, `gitops/apps/namespaces.yaml`, `gitops/apps/rbac.yaml`
 
-### Phase 3 — Observability
+### Phase 3 — The Eyes (Observability)
 - EXTEND: `.claude/skills/otel-wiring.md`, `gitops/apps/otel-collector.yaml`, `gitops/apps/prometheus.yaml`, `gitops/apps/grafana-dashboards.yaml`
 - COPY: `gitops/apps/tempo.yaml`, `gitops/apps/loki.yaml` (if logs needed)
-- NEW: All three Grafana dashboards, OTel Collector config, spinybacked-orbweaver config, GenAI semconv registry
+- NEW: All three Grafana dashboards (`the-eyes-overview.json`, `prompt-response-traces.json`, `cast-net-comparison.json`), OTel Collector config, spinybacked-orbweaver config, GenAI semconv registry
 
-### Phase 4 — Security
+### Phase 4 — The Net — Security
 - COPY: `policies/kyverno/disallow-privileged.yaml`, `require-networkpolicy.yaml`, `require-probes.yaml`, `require-resource-limits.yaml`; `policies/network-policies/default-deny.yaml`
 - EXTEND: `.claude/skills/kyverno-policies.md`, `.claude/skills/falco-rules.md`, `policies/kyverno/require-labels.yaml`, `security/falco/custom-rules.yaml`
 - ADAPT: `gitops/apps/kyverno.yaml`, `gitops/apps/falco.yaml`, `gitops/apps/falcosidekick.yaml`, `gitops/apps/external-secrets.yaml`
-- NEW: `require-model-provenance.yaml`, `require-inference-labels.yaml`, `restrict-gpu-requests.yaml`, `require-guardrails-sidecar.yaml`, `require-otel-annotations.yaml`; `ai-workload-rules.yaml`; per-burritbot network policies
+- NEW: `require-model-provenance.yaml` (with `deinopis.io/layer: the-net` labels), `require-inference-labels.yaml`, `restrict-gpu-requests.yaml`, `require-guardrails-sidecar.yaml` (matches `deinopis-*` container names in `burritbot-guarded`), `require-otel-annotations.yaml`; `ai-workload-rules.yaml` (tagged `[deinopis, the-net, ...]`); per-burritbot network policies
 
-### Phase 5 — AI Gateway
-- No source reuse. All-new files under `guardrails/` and `gitops/apps/envoy-ai-gateway/`, `nemo-guardrails/`, `llm-guard/`.
+### Phase 5 — The Net — AI Gateway
+- No source reuse. All-new files under `guardrails/` and `gitops/apps/envoy-ai-gateway/`, `nemo-guardrails/`, `llm-guard/`. Deployed into the `deinopis-net` namespace.
 
 ### Phase 6 — BurritBot
 - No source reuse. New `app/burritbot/` tree plus `gitops/apps/burritbot-unguarded/` and `burritbot-guarded/`.
