@@ -6,14 +6,18 @@
 >    in any descriptions added around this spec (the spec body references the
 >    speakers in either order; this is not a verbatim edit, just a note that
 >    the repo-level framing always lists Whitney first).
-> 2. **Gemini model corrected** from `gemini-1.5-flash` to `gemini-2.5-flash`
+> 2. **Gemini model corrected** from `gemini-1.5-flash` to `gemini-3-pro`
 >    when the sample BurritBot code is actually written. Research on
->    2026-04-09: Gemini 1.5 Flash is unsupported; Gemini 2.0 Flash is
->    deprecated and shuts down on 2026-06-01 (before the talk);
->    Gemini 2.5 Flash is the current GA model and is the chosen default
->    for this build. Gemini 3 Flash is preview-tier and not used for a
->    live demo. The spec text below still shows the original 1.5-flash
->    string — the *actual* `app/burritbot/app.py` file uses 2.5-flash.
+>    2026-04-09: Gemini 1.5 is unsupported; Gemini 2.0 Flash is retired;
+>    Gemini 2.5 Flash and 2.5 Pro both retire on 2026-10-16 — four weeks
+>    before the talk; Gemini 3 Flash is preview-tier and not safe for a
+>    live demo. **Gemini 3 Pro** is the only Vertex AI model guaranteed
+>    to be GA and live on demo day, so it is the chosen default.
+>    Access is via `google-genai` 1.71.0 with `vertexai=True`; the older
+>    `google-cloud-aiplatform.vertexai.generative_models` module is
+>    removed after 2026-06-24 and must not be reintroduced. The spec text
+>    below still shows the original 1.5-flash string — the *actual*
+>    `apps/burritbot/app.py` file uses `gemini-3-pro`.
 >
 > Everything else is verbatim as received. Do not paraphrase when executing
 > phases — reference this file directly. Companion planning / reuse docs
@@ -82,17 +86,22 @@ Phase 6: BurritBot Application (unguarded + guarded versions)
 Phase 7: Audience Interaction Frontend + Demo Runbook
 Phase 8: Hardening + Backup Videos
 
-## Critical Versions (pin these, do not use latest)
-- GKE: 1.30+
-- ArgoCD: 2.14+
-- Kyverno: 1.13+ (CEL policies GA)
-- Falco: 0.40+ (modern-bpf driver)
-- OTel Collector: 0.100+ (GenAI semantic conventions support)
-- OTel Weaver: 0.16+ (registry check, emit, live-check)
+## Critical Versions (pinned to latest GA as of 2026-04-09)
+- GKE: 1.33 Stable channel minimum
+- Terraform `hashicorp/google` + `google-beta`: `~> 7.0` (current GA 7.27.0)
+- ArgoCD: 3.3+ (chart 9.5.x)
+- Kyverno: helm chart 3.7.1, app 1.17.x (CEL policies GA)
+- Falco: 0.43.x binary, rules `required_engine_version: 0.57.0` (modern-bpf)
+- OTel Collector: 0.149+ (GenAI semconv v1.37.0 with `gen_ai.provider.name`)
+- OTel Weaver: 0.22+ (registry check, emit, live-check)
+- OTel Python (`opentelemetry-api`/`sdk`): 1.41.0 (`-instrumentation-*`: 0.62b0)
 - spinybacked-orbweaver: latest (Whitney's auto-instrumentation agent)
 - NeMo Guardrails: 0.11+
 - LLM Guard: 0.3.17+
 - Grafana: 11+
+- Vertex AI model: `gemini-3-pro` via `google-genai` 1.71.0 with
+  `vertexai=True` (`google-cloud-aiplatform.vertexai.generative_models`
+  is removed after 2026-06-24)
 
 ## Rules
 - No kubectl apply after Phase 2 except for one-time ArgoCD bootstrap
@@ -359,7 +368,7 @@ processors:
   batch:
   attributes:
     actions:
-      - key: gen_ai.system
+      - key: gen_ai.provider.name
         action: upsert
       - key: gen_ai.request.model
         action: upsert

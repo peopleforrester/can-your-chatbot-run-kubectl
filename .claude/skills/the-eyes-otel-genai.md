@@ -2,9 +2,10 @@
 
 ## Version Pins
 
-- OpenTelemetry Collector: **0.100+** (contrib distribution — we need the
-  `attributes`, `transform`, and `tail_sampling` processors)
-- OTel Weaver: **0.16+**
+- OpenTelemetry Collector: **0.149+** (contrib distribution — we need the
+  `attributes`, `transform`, and `tail_sampling` processors, plus
+  GenAI semantic conventions v1.37.0 support)
+- OTel Weaver: **0.22+**
 - Prometheus: via `kube-prometheus-stack` (monitoring namespace)
 - Grafana: bundled with `kube-prometheus-stack`
 

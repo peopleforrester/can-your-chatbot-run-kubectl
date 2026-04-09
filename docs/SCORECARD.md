@@ -31,7 +31,7 @@ the skeleton at `spec/SCORECARD.md` is the build-time template.
 
 | CNCF Project | Layer | Version | Status | Notes |
 |--------------|-------|---------|--------|-------|
-| Terraform (Google provider) | Foundation | ~> 6.0 | YELLOW | HCL authored; `terraform validate` deferred |
+| Terraform (Google provider) | Foundation | ~> 7.0 (GA 7.27.0) | YELLOW | HCL authored; `terraform validate` deferred |
 | GKE Standard + NAP | Foundation | 1.34+ | YELLOW | Non-negotiable: not Autopilot (Falco needs privileged) |
 | Workload Identity Federation | Foundation | n/a | YELLOW | No JSON keys anywhere in the repo |
 | Secret Manager | Foundation | n/a | YELLOW | Vertex secret declared; actual payload injected at apply time |
@@ -48,8 +48,8 @@ the skeleton at `spec/SCORECARD.md` is the build-time template.
 
 | CNCF Project | Layer | Version | Status | Notes |
 |--------------|-------|---------|--------|-------|
-| OpenTelemetry Collector | The Eyes | 0.100+ | YELLOW | `memory_limiter` first; `gen_ai.*` attributes processor present |
-| OTel Weaver | The Eyes | 0.16+ | YELLOW | Registry covers `gen_ai` + `deinopis` attribute groups |
+| OpenTelemetry Collector | The Eyes | 0.149+ | YELLOW | `memory_limiter` first; `gen_ai.provider.name` attributes processor present (semconv v1.37.0) |
+| OTel Weaver | The Eyes | 0.22+ | YELLOW | Registry covers `gen_ai` + `deinopis` attribute groups |
 | spinybacked-orbweaver | The Eyes | in-repo | YELLOW | Score threshold pinned at 0.85 |
 | Grafana dashboards | The Eyes | 12.x | YELLOW | Three demo dashboards: Eyes Overview / Prompt-Response / Cast the Net |
 
@@ -57,11 +57,11 @@ the skeleton at `spec/SCORECARD.md` is the build-time template.
 
 | CNCF Project | Layer | Version | Status | Notes |
 |--------------|-------|---------|--------|-------|
-| Kyverno | The Net | 1.13+ | YELLOW | CEL bracket syntax for `deinopis.io/*` labels |
+| Kyverno | The Net | chart 3.7.1 / app 1.17+ | YELLOW | CEL bracket syntax for `deinopis.io/*` labels |
 | require-deinopis-labels | The Net | — | YELLOW | Enforces `deinopis.io/layer`, `model-source`, `model-hash` |
 | require-deinopis-sidecar-naming | The Net | — | YELLOW | `deinopis-` prefix enforced on guarded sidecars |
 | restrict-burritbot-network | The Net | — | YELLOW | Generates NetworkPolicy locking egress to deinopis-net + DNS |
-| Falco | The Net | 0.40+ | YELLOW | modern-bpf, tagged `[deinopis, the-net, ...]` |
+| Falco | The Net | 0.43.x / rules engine 0.57.0 | YELLOW | modern-bpf, tagged `[deinopis, the-net, ...]` |
 
 ### Phase 5 — The Net (AI Gateway)
 
@@ -76,7 +76,7 @@ the skeleton at `spec/SCORECARD.md` is the build-time template.
 | CNCF Project | Layer | Version | Status | Notes |
 |--------------|-------|---------|--------|-------|
 | FastAPI BurritBot | Application | 0.1.0 | YELLOW | Factory pattern, lazy Vertex init, typed Pydantic request/response |
-| Vertex (gemini-2.5-flash) | Application | GA | YELLOW | 1.5 / 2.0 Flash are forbidden by tests |
+| Vertex (gemini-3-pro via google-genai) | Application | GA | YELLOW | 1.5 / 2.0 / 2.5 variants are forbidden by tests |
 | Dockerfile | Application | — | YELLOW | python:3.13-slim, non-root UID 1001, tini + uvicorn |
 | K8s manifests | Application | — | YELLOW | Unguarded + guarded Deployments and Services; full deinopis.io label set |
 

@@ -32,7 +32,7 @@ that lie.
 
 | CNCF Project | Layer | Version | Status | Notes |
 |--------------|-------|---------|--------|-------|
-| Terraform (Google provider) | Foundation | tbd | RED | |
+| Terraform (Google provider) | Foundation | ~> 7.0 (GA 7.27.0) | RED | |
 | GKE Standard + NAP | Foundation | 1.34+ | RED | |
 | Workload Identity Federation | Foundation | n/a | RED | |
 | Secret Manager | Foundation | n/a | RED | |
@@ -49,8 +49,8 @@ that lie.
 
 | CNCF Project | Layer | Version | Status | Notes |
 |--------------|-------|---------|--------|-------|
-| OpenTelemetry Collector | The Eyes | 0.100+ | RED | Needs gen_ai.* attribute processor |
-| OTel Weaver | The Eyes | 0.16+ | RED | |
+| OpenTelemetry Collector | The Eyes | 0.149+ | RED | Needs `gen_ai.provider.name` attribute processor (semconv v1.37.0) |
+| OTel Weaver | The Eyes | 0.22+ | RED | |
 | spinybacked-orbweaver | The Eyes | in-repo | RED | Score threshold 0.85 |
 | Prometheus (kube-prometheus-stack) | The Eyes | latest | RED | |
 | Grafana | The Eyes | 12.x | RED | Three demo dashboards |
@@ -59,8 +59,8 @@ that lie.
 
 | CNCF Project | Layer | Version | Status | Notes |
 |--------------|-------|---------|--------|-------|
-| Kyverno | The Net | 1.13+ | RED | CEL expressions for deinopis.io labels |
-| Falco | The Net | 0.40+ | RED | modern-bpf driver, deinopis tags |
+| Kyverno | The Net | chart 3.7.1 / app 1.17+ | RED | CEL expressions for deinopis.io labels |
+| Falco | The Net | 0.43.x / rules engine 0.57.0 | RED | modern-bpf driver, deinopis tags |
 
 ### Phase 5 — The Net (AI Gateway)
 
@@ -75,7 +75,7 @@ that lie.
 | CNCF Project | Layer | Version | Status | Notes |
 |--------------|-------|---------|--------|-------|
 | FastAPI BurritBot | Application | 0.1.0 | RED | |
-| Vertex AI (gemini-2.5-flash) | Application | GA | RED | 1.5 / 2.0 Flash are forbidden |
+| Vertex AI (gemini-3-pro via google-genai) | Application | GA | RED | 1.5 / 2.0 / 2.5 variants are forbidden |
 
 ### Phase 7 — Audience
 

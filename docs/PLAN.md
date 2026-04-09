@@ -83,7 +83,7 @@ once tests are green.
 | 3 | The Eyes | 90 min | Prom + Grafana + OTel Collector with `gen_ai.*` processors; 3 dashboards (the-eyes-overview, prompt-response-traces, cast-net-comparison); spinybacked-orbweaver auto-instrumentation | Reuse OTel wiring skill and base values; extend with GenAI conventions |
 | 4 | The Net — Security | 120 min | Kyverno AI policies (provenance, sidecar, OTel annotations — all with `deinopis.io/layer: the-net` labels), Falco AI-workload rules tagged `[deinopis, the-net, ...]`, network policies | Reuse disallow-privileged, require-labels, require-resource-limits, require-probes, default-deny; extend falco base rules |
 | 5 | The Net — AI Gateway | 120 min | Envoy AI Gateway, NeMo Guardrails (Colang: burrito-only, jailbreak-detect, topic-enforcement, output-sanitize), LLM Guard (input+output scanners) | None — all new |
-| 6 | BurritBot | 90 min | Streamlit app (Dockerfile, app.py **with gemini-2.5-flash**, system prompt), unguarded + guarded deployments | None — all new |
+| 6 | BurritBot | 90 min | FastAPI app (Dockerfile, app.py **with `gemini-3-pro` via `google-genai`**, system prompt), unguarded + guarded deployments | None — all new |
 | 7 | Audience Frontend | 60 min | Mobile web UI, QR code, WebSocket, FastAPI proxy, rate limiting (10 req/min/IP) | None — all new |
 | 8 | Hardening | 60 min | RUNBOOK.md, `cast-net.sh` toggle, backup videos, COST.md, TEARDOWN.md | Reuse COST/TEARDOWN document *structure* |
 
@@ -128,19 +128,25 @@ from scratch because `staging` cannot exist without it. After the bootstrap,
 
 ## 6. Critical Versions (pin, do not use latest)
 
-From the spec:
-- GKE: 1.30+ (DRA support)
-- ArgoCD: 2.14+
-- Kyverno: 1.13+ (CEL policies GA)
-- Falco: 0.40+ (modern-bpf driver)
-- OTel Collector: 0.100+ (GenAI semantic conventions support)
-- OTel Weaver: 0.16+ (registry check, emit, live-check)
+Current GA versions pinned as of 2026-04-09:
+- GKE: 1.33 Stable channel minimum (DRA support)
+- Terraform `hashicorp/google` + `google-beta`: `~> 7.0` (current GA 7.27.0)
+- ArgoCD: 3.3+ (helm chart 9.5.x)
+- Kyverno: helm chart 3.7.1, app 1.17.x (CEL policies GA)
+- Falco: 0.43.x binary, rules `required_engine_version: 0.57.0` (modern-bpf)
+- OTel Collector: 0.149+ (GenAI semconv v1.37.0 with `gen_ai.provider.name`)
+- OTel Weaver: 0.22+ (registry check, emit, live-check)
+- OTel Python (`opentelemetry-api`/`sdk`): 1.41.0 (`-instrumentation-*`: 0.62b0)
 - NeMo Guardrails: 0.11+
 - LLM Guard: 0.3.17+
 - Grafana: 11+
 - spinybacked-orbweaver: latest (Whitney's agent)
-- **Gemini model:** `gemini-2.5-flash` (GA). Not 1.5 (unsupported), not 2.0
-  (deprecated, shuts down 2026-06-01 before the talk), not 3 (preview-tier).
+- **Gemini model:** `gemini-3-pro` (GA) via `google-genai` 1.71.0 with
+  `vertexai=True`. 1.5 is unsupported; 2.0 Flash is retired; 2.5 Flash/Pro
+  retire 2026-10-16 — four weeks before the talk; 3 Flash is preview-tier.
+  3 Pro is the only Vertex AI model guaranteed to be live on demo day.
+  `google-cloud-aiplatform.vertexai.generative_models` is removed after
+  2026-06-24; do not reintroduce it.
 
 Every Phase-X session must verify the relevant version is still current
 (GitHub releases + official docs) before writing chart values. The
@@ -155,7 +161,7 @@ so prefer live-check over stale map.
 | 1 | GCP project ID | `deinopis-kubecon-2026` | Phase 1 cluster bring-up |
 | 2 | Region | `us-west1` (close to SLC) | Phase 1 cluster bring-up |
 | 3 | GKE mode | **Standard + node auto-provisioning** (non-negotiable; Falco DaemonSets) | Locked |
-| 4 | Gemini model | `gemini-2.5-flash` (GA) | Phase 6 app deploy |
+| 4 | Gemini model | `gemini-3-pro` (GA) via `google-genai` | Phase 6 app deploy |
 | 5 | Audience frontend backend | **FastAPI** (Python) | Phase 7 |
 | 6 | Licensing | Apache 2.0 | Phase 0 (already chosen) |
 | 7 | Demo domain / Cloud DNS | Undecided — default to raw Gateway IP | Phase 7 or 8 |
@@ -166,13 +172,13 @@ so prefer live-check over stale map.
 | Risk | Likelihood | Mitigation |
 |------|------------|------------|
 | Falco cannot run on GKE Autopilot (DaemonSet / privileged restriction) | Resolved | Locked to GKE Standard + NAP in Phase 1 |
-| OTel GenAI semantic conventions still shifting | Medium | Pin OTel Collector ≥0.100 and verify the `gen_ai.*` namespace on the day we write the config |
+| OTel GenAI semantic conventions still shifting | Medium | Pin OTel Collector ≥0.149 (semconv v1.37.0) and verify the `gen_ai.provider.name` namespace on the day we write the config |
 | spinybacked-orbweaver is a moving target | Medium | Pin the exact commit used for rehearsal; document in `observability/spinybacked-orbweaver/config.yaml` |
 | Vertex AI rate limiting during audience interaction | Medium | Rate-limit the audience frontend at 10 req/min/IP; also pre-warm a small response cache |
 | Conference WiFi unreliable | High | Pre-record backup videos for every demo segment in Phase 8; have a cellular hotspot on standby |
 | Cluster left running between rehearsals | Medium | `cast-net.sh` for live toggle, `demo/teardown.sh` + nightly Terraform destroy reminder |
 | Secrets accidentally committed | Low | gitleaks pre-commit hook (port from kubeauto-ai-day), plus .gitignore exclusions |
-| Gemini model version drift between now and KubeCon | Medium | Pin `gemini-2.5-flash`; re-verify GA status and pricing in Phase 8 rehearsal week |
+| Gemini model version drift between now and KubeCon | Medium | Pin `gemini-3-pro`; re-verify GA status and pricing in Phase 8 rehearsal week |
 
 ## 9. Cost Envelope (from spec)
 

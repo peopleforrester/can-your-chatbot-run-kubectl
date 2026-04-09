@@ -2,8 +2,8 @@
 
 ## Version Pins
 
-- Kyverno: **1.13+** (CEL expressions, validate.cel blocks, policy exceptions)
-- Kyverno Helm chart: **3.3.x** or later
+- Kyverno: **1.17+** (CEL expressions, validate.cel blocks, policy exceptions)
+- Kyverno Helm chart: **3.7.1** (pinned in `gitops/apps/05-kyverno.yaml`)
 - `kyverno test` CLI version must match the cluster version
 
 ## The Point of This Skill
@@ -64,9 +64,9 @@ spec:
                 has(object.metadata.labels['deinopis.io/model-hash'])
 ```
 
-The CEL check — *not* a `pattern:` match — is what we want from
-Kyverno 1.13. It's faster, and it gives a better audience demo when
-you `kubectl apply` a pod without the labels.
+The CEL check — *not* a `pattern:` match — is the shape we want.
+It's faster, and it gives a better audience demo when you
+`kubectl apply` a pod without the labels.
 
 ## Policy Skeleton — require-deinopis-sidecar-naming
 

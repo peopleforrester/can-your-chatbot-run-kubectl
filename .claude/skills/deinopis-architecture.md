@@ -40,7 +40,7 @@ our cluster?" with an equally cheerful response.
 1. **Foundation** — GKE Standard + NAP, VPC, WIF, Secret Manager
 2. **GitOps** — ArgoCD, app-of-apps, namespaces
 3. **The Eyes** — OTel Collector with `gen_ai.*` processors, Weaver registry, spinybacked-orbweaver, Prometheus, Grafana dashboards
-4. **The Net — Security** — Kyverno 1.13+ CEL policies, Falco 0.40+ modern-bpf rules
+4. **The Net — Security** — Kyverno chart 3.7.1 (app 1.17+) CEL policies, Falco 0.43.x with rules `required_engine_version: 0.57.0` on modern-bpf
 5. **The Net — AI Gateway** — NeMo Guardrails Colang rails, LLM Guard input/output scanners, Envoy AI Gateway route
 6. **BurritBot** — FastAPI app, Vertex AI client, unguarded + guarded Deployments
 7. **Audience Frontend** — FastAPI + rate limiting, `cast-net.sh` toggle, QR code for the room

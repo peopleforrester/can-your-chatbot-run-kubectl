@@ -12,7 +12,7 @@ sidecar naming convention.
 **Outputs:**
 
 - `ai-gateway/nemo-guardrails/config.yaml` — wires models (Vertex AI,
-  gemini-2.5-flash) and references the Colang rails
+  `gemini-3-pro` via `google-genai`) and references the Colang rails
 - `ai-gateway/nemo-guardrails/burrito-only.co`
 - `ai-gateway/nemo-guardrails/jailbreak-detect.co`
 - `ai-gateway/nemo-guardrails/topic-enforcement.co`

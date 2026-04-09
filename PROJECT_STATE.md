@@ -39,7 +39,7 @@ cluster yet.
 | 13 | Phase 3: The Eyes (observability) | completed | af6629a |
 | 14 | Phase 4: The Net — Security (Kyverno + Falco) | completed | 1d77e42 |
 | 15 | Phase 5: The Net — AI Gateway | completed | e4602e2 |
-| 16 | Phase 6: BurritBot application (gemini-2.5-flash) | completed | cdb1dda |
+| 16 | Phase 6: BurritBot application (gemini-3-pro) | completed | cdb1dda |
 | 17 | Phase 7: Audience frontend + rate limiter | completed | 542c194 |
 | 18 | Phase 8: Hardening, runbook, docs | completed | (this commit) |
 
@@ -61,8 +61,10 @@ cluster yet.
 2. **Region:** `us-west1`.
 3. **GKE mode:** **Standard with node auto-provisioning.** Not Autopilot —
    Falco DaemonSet needs privileged container support.
-4. **Gemini model:** `gemini-2.5-flash` (GA). 1.5 Flash is unsupported;
-   2.0 Flash shuts down 2026-06-01 (before the talk); 3 Flash is preview.
+4. **Gemini model:** `gemini-3-pro` (GA) accessed via `google-genai` with
+   `vertexai=True`. 1.5 is unsupported; 2.0 Flash is retired; 2.5 Flash/Pro
+   retire 2026-10-16 — four weeks before the talk; 3 Flash is preview-tier.
+   3 Pro is the only Vertex AI model guaranteed to be live on demo day.
 5. **Audience frontend backend:** FastAPI (matches the rest of the stack).
 6. **Licensing:** Apache 2.0 (matching kubeauto-ai-day lineage).
 

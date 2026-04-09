@@ -11,7 +11,8 @@ namespace exists.
 **Outputs:**
 
 - `observability/otel-collector/config.yaml` — declares `attributes`
-  processor with `gen_ai.system`, `gen_ai.request.model`,
+  processor with `gen_ai.provider.name` (canonicalised to `gcp.vertex_ai`
+  per OTel semconv v1.37.0), `gen_ai.request.model`,
   `gen_ai.usage.input_tokens`, `gen_ai.usage.output_tokens`; declares
   both `prometheus` and an `otlp*` exporter
 - `observability/otel-weaver/genai-semconv-registry.yaml` — Weaver
@@ -44,9 +45,10 @@ Live:
 
 **Key Technology Decisions:**
 
-- OpenTelemetry Collector 0.100+ (contrib distribution — we need the
-  `attributes`, `transform`, and `tail_sampling` processors)
-- OTel Weaver 0.16+ as the GenAI schema contract
+- OpenTelemetry Collector 0.149+ (contrib distribution — we need the
+  `attributes`, `transform`, and `tail_sampling` processors, plus
+  GenAI semconv v1.37.0 support)
+- OTel Weaver 0.22+ as the GenAI schema contract
 - kube-prometheus-stack for Prometheus + Grafana bundle
 - spinybacked-orbweaver as the in-repo conformance scorer; configured
   with a `score_threshold` of 0.85 to make the unguarded path fail

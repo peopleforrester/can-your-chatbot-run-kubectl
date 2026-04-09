@@ -6,7 +6,8 @@ The authoritative, verbatim build plan for this project is
 `docs/BUILD-INSTRUCTIONS.md`. That file was delivered by Michael at
 project kickoff and has not been edited — the only change is a
 preamble documenting two deviations (speaker ordering and the
-`gemini-1.5-flash → gemini-2.5-flash` model pin).
+`gemini-1.5-flash → gemini-3-pro` model pin, accessed via the
+`google-genai` SDK).
 
 This directory (`spec/`) holds:
 

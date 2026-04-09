@@ -77,17 +77,22 @@ for the per-file copy/adapt/extend/ignore map.
 - **Phase 7:** Audience Interaction Frontend + Demo Runbook
 - **Phase 8:** Hardening + Backup Videos
 
-## Critical Versions (pin these, do not use latest)
-- GKE: 1.30+
-- ArgoCD: 2.14+
-- Kyverno: 1.13+ (CEL policies GA)
-- Falco: 0.40+ (modern-bpf driver)
-- OTel Collector: 0.100+ (GenAI semantic conventions support)
-- OTel Weaver: 0.16+ (registry check, emit, live-check)
+## Critical Versions (pinned to latest GA as of 2026-04-09)
+- GKE: 1.33 Stable channel minimum
+- Terraform `hashicorp/google` + `google-beta`: `~> 7.0` (7.27.0 current GA)
+- ArgoCD: 3.3+ (chart 9.5.x)
+- Kyverno: chart 3.7.1 / app 1.17+ (CEL policies GA)
+- Falco: 0.43+ binary / rules `required_engine_version: 0.57.0` (modern-bpf)
+- OTel Collector: 0.149+ (GenAI semantic conventions v1.37.0 support)
+- OTel Weaver: 0.22+ (registry check, emit, live-check)
+- OTel Python (`opentelemetry-api`/`sdk`): 1.41.0 (`-instrumentation-*`: 0.62b0)
 - spinybacked-orbweaver: latest (Whitney's auto-instrumentation agent)
 - NeMo Guardrails: 0.11+
 - LLM Guard: 0.3.17+
 - Grafana: 11+
+- Vertex AI model: `gemini-3-pro` via `google-genai` 1.71.0
+  (`google-cloud-aiplatform.vertexai.generative_models` is removed
+  after 2026-06-24 — do not reintroduce it)
 
 ## Rules
 - No `kubectl apply` after Phase 2 except for the one-time ArgoCD bootstrap.

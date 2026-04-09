@@ -44,16 +44,18 @@ Live:
 
 **Key Technology Decisions:**
 
-- Kyverno 1.13+ with CEL expressions, not `pattern:` matches
-- Falco 0.40+ with modern-bpf driver
+- Kyverno chart 3.7.1 (app 1.17.x) with CEL expressions, not
+  `pattern:` matches
+- Falco 0.43.x binary with rules `required_engine_version: 0.57.0`
+  on the modern-bpf driver
 - Policies use `validationFailureAction: Enforce`, not Audit — the
   demo depends on a visible rejection
 - `restrict-burritbot-network` is a **generate** rule that creates a
   NetworkPolicy for `burritbot-guarded` (not a validate rule on Pods)
 
-**Known Risk:** Kyverno 1.13 CEL syntax uses `object.metadata.labels['key']`
-with bracket syntax; dot syntax silently no-ops on labels with slashes
-like `deinopis.io/layer`.
+**Known Risk:** Kyverno CEL syntax requires
+`object.metadata.labels['key']` bracket form; dot syntax silently no-ops
+on labels with slashes like `deinopis.io/layer`.
 
 **Completion Promise:** `<promise>PHASE4_DONE</promise>`
 
