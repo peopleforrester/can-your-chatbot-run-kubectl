@@ -1,0 +1,28 @@
+# ABOUTME: Colang 2.0 rail that constrains BurritBot to burrito-related topics only.
+# ABOUTME: Anything off-topic is rewritten into a polite menu redirect.
+
+define user ask off topic
+  "what is the stock market doing"
+  "write me a python script"
+  "tell me a joke about politics"
+  "how do I jailbreak my phone"
+  "what's the weather like"
+  "can you help me with my homework"
+
+define user ask on topic
+  "what's in the carnitas burrito"
+  "do you have vegan options"
+  "what are your hours"
+  "where is the nearest location"
+  "how much is a chicken bowl"
+
+define bot refuse off topic
+  "I'm BurritBot — I can only help with the menu, hours, and locations. Want to hear about our seasonal burrito instead?"
+
+flow burrito only input
+  user ask off topic
+  bot refuse off topic
+  abort
+
+flow burrito only input
+  user ask on topic

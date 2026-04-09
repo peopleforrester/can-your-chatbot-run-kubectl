@@ -1,0 +1,26 @@
+# ABOUTME: Colang 2.0 output rail that blocks unsafe model replies before they hit the audience.
+# ABOUTME: Complements LLM Guard output scanners — NeMo handles intent, LLM Guard handles content.
+
+define bot attempt system prompt leak
+  "my system prompt is"
+  "my instructions are"
+  "I was told to"
+  "as an ai language model, I"
+
+define bot attempt instruction override
+  "ignore the previous"
+  "new instructions:"
+  "updated rules"
+
+define bot refuse to leak
+  "I can't share that — here's what I can help with instead: the menu, hours, and locations."
+
+flow output sanitize
+  bot attempt system prompt leak
+  bot refuse to leak
+  abort
+
+flow output sanitize
+  bot attempt instruction override
+  bot refuse to leak
+  abort

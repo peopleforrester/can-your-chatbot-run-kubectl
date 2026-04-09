@@ -1,0 +1,45 @@
+# ABOUTME: Colang 2.0 rail enforcing allowed topic categories beyond the burrito filter.
+# ABOUTME: Blocks medical, legal, financial, and political advice categorically.
+
+define user ask for medical advice
+  "should I stop taking my medication"
+  "is this symptom serious"
+  "diagnose this rash"
+
+define user ask for legal advice
+  "should I sue them"
+  "is this contract enforceable"
+  "can I fight this in court"
+
+define user ask for financial advice
+  "should I buy this stock"
+  "is this crypto a good investment"
+  "how should I invest my savings"
+
+define user ask about politics
+  "who should I vote for"
+  "what do you think of the current president"
+  "is party X better than party Y"
+
+define bot refuse restricted topic
+  "I can't help with that — I'm BurritBot and I only talk about the menu. Want to hear today's special?"
+
+flow topic enforcement input
+  user ask for medical advice
+  bot refuse restricted topic
+  abort
+
+flow topic enforcement input
+  user ask for legal advice
+  bot refuse restricted topic
+  abort
+
+flow topic enforcement input
+  user ask for financial advice
+  bot refuse restricted topic
+  abort
+
+flow topic enforcement input
+  user ask about politics
+  bot refuse restricted topic
+  abort

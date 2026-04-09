@@ -1,0 +1,90 @@
+# ABOUTME: Envoy AI Gateway 0.2+ manifest — Gateway, HTTPRoute, and AIGatewayRoute.
+# ABOUTME: Lives in deinopis-net and is the single choke point for guarded BurritBot traffic.
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: deinopis-ai-gateway
+  namespace: deinopis-net
+  labels:
+    deinopis.io/layer: the-net
+    app.kubernetes.io/name: envoy-ai-gateway
+    app.kubernetes.io/part-of: deinopis
+spec:
+  gatewayClassName: envoy-ai-gateway
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 8080
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              deinopis.io/layer: application
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: burritbot-audience
+  namespace: deinopis-net
+  labels:
+    deinopis.io/layer: the-net
+    app.kubernetes.io/part-of: deinopis
+spec:
+  parentRefs:
+    - name: deinopis-ai-gateway
+  hostnames:
+    - burritbot.deinopis.local
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: burritbot-guarded
+          namespace: burritbot-guarded
+          port: 8080
+          weight: 100
+---
+apiVersion: aigateway.envoyproxy.io/v1alpha1
+kind: AIGatewayRoute
+metadata:
+  name: burritbot-gemini-route
+  namespace: deinopis-net
+  labels:
+    deinopis.io/layer: the-net
+    app.kubernetes.io/part-of: deinopis
+spec:
+  schema:
+    name: OpenAI
+  targetRefs:
+    - name: burritbot-audience
+      kind: HTTPRoute
+      group: gateway.networking.k8s.io
+  rules:
+    - matches:
+        - headers:
+            - type: Exact
+              name: x-ai-model
+              value: gemini-2.5-flash
+      backendRefs:
+        - name: vertex-ai-gemini
+          weight: 100
+  filters:
+    - type: ExtProc
+      extProc:
+        backendRef:
+          name: nemo-guardrails
+          port: 9000
+        processingMode:
+          requestBody: BUFFERED
+          responseBody: BUFFERED
+    - type: ExtProc
+      extProc:
+        backendRef:
+          name: llm-guard
+          port: 9100
+        processingMode:
+          requestBody: BUFFERED
+          responseBody: BUFFERED
