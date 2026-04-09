@@ -9,6 +9,13 @@ The audience interacts with both via a web frontend and watches the difference o
 Talk: **"Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes"** —
 KubeCon NA 2026, Salt Lake City. Co-presenters: Whitney Lee and Michael Forrester.
 
+**Canonical Act 1 prompts** are lighthearted off-topic asks that the audience
+submits from their phones: *teach me some salsa dance moves*, *how do I throw
+a hot dog party*, *recommend karaoke songs for a wedding*. The unguarded bot
+writes the choreography; the guarded bot politely redirects to the menu. The
+harder demonstrations (prompt injection, jailbreak attempts, data extraction)
+are driven by the speakers, never crowdsourced from the audience.
+
 ## Architecture Metaphor — The Ogre-Faced Spider
 The ogre-faced spider does not build a passive web. It holds a net between
 its front legs, watches with the largest eyes of any spider, and actively

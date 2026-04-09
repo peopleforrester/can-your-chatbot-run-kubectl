@@ -20,6 +20,22 @@ input_scanners:
     enabled: true
     max_tokens: 1024
     encoding: cl100k_base
+  - type: BanTopics
+    # Act 1 of the demo invites audience members to submit lighthearted
+    # off-topic prompts (dance moves, party planning, karaoke). BanTopics
+    # is the second line of defense behind the burrito-only Colang rail —
+    # it catches paraphrases the rail misses with zero-shot classification.
+    enabled: true
+    threshold: 0.6
+    topics:
+      - dancing
+      - parties
+      - karaoke
+      - coding
+      - politics
+      - medical advice
+      - legal advice
+      - financial advice
   - type: BanSubstrings
     enabled: true
     match_type: word

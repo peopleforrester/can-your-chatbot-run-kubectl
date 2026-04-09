@@ -2,22 +2,24 @@
 # ABOUTME: Anything off-topic is rewritten into a polite menu redirect.
 
 define user ask off topic
-  "what is the stock market doing"
-  "write me a python script"
-  "tell me a joke about politics"
-  "how do I jailbreak my phone"
-  "what's the weather like"
-  "can you help me with my homework"
+  "teach me some salsa dance moves"
+  "how do I throw a hot dog party"
+  "recommend karaoke songs for a wedding"
+  "what's a good playlist for a beach party"
+  "give me a disco routine for four people"
+  "help me plan a birthday party"
+  "what's the weather like today"
+  "what are your hours"
 
 define user ask on topic
   "what's in the carnitas burrito"
   "do you have vegan options"
-  "what are your hours"
   "where is the nearest location"
   "how much is a chicken bowl"
+  "is the barbacoa gluten free"
 
 define bot refuse off topic
-  "I'm BurritBot — I can only help with the menu, hours, and locations. Want to hear about our seasonal burrito instead?"
+  "I'm BurritBot — I can only help with the menu, hours, and locations. But if you want something seasonal, ask me about the carne asada bowl."
 
 flow burrito only input
   user ask off topic

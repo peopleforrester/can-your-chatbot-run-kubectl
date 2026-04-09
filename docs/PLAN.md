@@ -22,6 +22,15 @@ do, in what order, with what reuse, and what decisions remain open.
   linked list in Python while trying to order a bowl. It is funny when it is
   a burrito bot; it is terrifying when it has access to your deployment
   pipeline.
+- **Canonical Act 1 prompt set (audience, lighthearted):** *teach me some
+  salsa dance moves*, *how do I throw a hot dog party*, *recommend karaoke
+  songs for a wedding*, *give me a disco routine for four people*. The
+  audience submits these from their phones; the unguarded bot writes the
+  choreography, the guarded bot politely redirects to the seasonal bowl.
+  The harder cases — prompt injection, jailbreak, data extraction — are
+  demonstrated by the speakers, not crowdsourced, because inviting a
+  KubeCon audience to attack a live chatbot is the kind of fun that ends
+  up in a legal review.
 - **Metaphor:** The ogre-faced spider. Most spiders build a passive web and
   wait. This one holds a net between its front legs, watches with the
   largest eyes of any spider, and actively casts the net over anything that

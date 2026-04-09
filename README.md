@@ -30,16 +30,22 @@ incident (order a burrito, also reverse a linked list in Python).
 Two acts, one burrito shop.
 
 - **Act 1 — Unguarded.** BurritBot is deployed to GKE with no protections.
-  The audience is invited to break it from their phones: off-topic questions,
-  prompt injection, jailbreaks, data extraction, social engineering. It
-  complies with all of them. The same pattern that let Chipotle's customer
-  support bot explain O(n) linked list reversal happens again, live.
+  The audience is invited to submit lighthearted off-topic prompts from
+  their phones: *teach me some salsa dance moves*, *how do I throw a hot
+  dog party*, *recommend karaoke songs for a wedding*. BurritBot cheerfully
+  obliges every one of them, just like Chipotle's customer support bot that
+  helped a user reverse a linked list in Python while he was trying to
+  order a bowl. An ordering bot is writing dance choreography on stage.
+  It's funny. It's also the exact same failure mode that lets an internal
+  bot answer questions it should never be answering.
 - **Act 2 — Guarded.** The same chatbot runs in a second namespace behind
   the burritbot net (Envoy AI Gateway → NeMo Guardrails → LLM Guard →
   Vertex AI), with Kyverno policies, Falco AI-workload rules, and OTel GenAI
-  semantic conventions wired through to a live Grafana dashboard. The
-  audience runs the same attacks and watches them get blocked, logged, and
-  traced in real time.
+  semantic conventions wired through to a live Grafana dashboard. The same
+  audience prompts come in and get politely redirected to the menu. The
+  speakers then escalate to the harder cases (prompt injection, jailbreak
+  attempts, data extraction) and the audience watches every one of them
+  get blocked, logged, and traced in real time.
 
 The point: **platform-level governance, not per-developer discipline.** The
 platform does the guardrailing, the developer writes a normal Streamlit app.
