@@ -7,7 +7,7 @@ Spec captured, plan drafted, reuse map scoped. No infrastructure built yet.
 ## Talk Context
 - Talk: "Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes"
 - Venue: KubeCon NA 2026, Salt Lake City
-- Speakers: Michael Forrester, Whitney Lee
+- Speakers: Whitney Lee, Michael Forrester
 - Format: Two-act live demo (unguarded then guarded BurritBot on GKE)
 
 ## What's Done (Phase 0)

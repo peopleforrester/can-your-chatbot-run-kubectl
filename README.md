@@ -2,7 +2,7 @@
 
 Demo platform for the KubeCon NA 2026 talk
 **"Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes"**
-co-presented by **Michael Forrester** and **Whitney Lee** in Salt Lake City.
+co-presented by **Whitney Lee** and **Michael Forrester** in Salt Lake City.
 
 ## The Talk
 

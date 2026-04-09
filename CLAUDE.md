@@ -6,7 +6,7 @@ Two modes: UNGUARDED (chatbot with no protections) and GUARDED (full CNCF guardr
 The audience interacts with both via a web frontend and watches the difference on a Grafana dashboard in real-time.
 
 Talk: **"Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes"** —
-KubeCon NA 2026, Salt Lake City. Co-presenters: Michael Forrester, Whitney Lee.
+KubeCon NA 2026, Salt Lake City. Co-presenters: Whitney Lee, Michael Forrester.
 
 ## Repository Origin
 Forked from kubeauto-idp (EKS). All AWS references must be converted to GCP equivalents.

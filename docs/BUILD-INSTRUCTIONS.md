@@ -1,12 +1,14 @@
 # Claude Code Build Instructions: Burrito Bots to Guardrails Demo Platform
 
-> Preserved verbatim as received. Authoritative spec. Do not paraphrase when
-> executing phases — reference this file directly. Companion planning /
-> reuse docs live alongside it (`PLAN.md`, `KUBEAUTO-REUSE-MAP.md`).
+> Preserved verbatim as received, with one edit: speaker ordering normalized to
+> "Whitney Lee and Michael Forrester" throughout this repo. Authoritative spec.
+> Do not paraphrase when executing phases — reference this file directly.
+> Companion planning / reuse docs live alongside it (`PLAN.md`,
+> `KUBEAUTO-REUSE-MAP.md`).
 
 ## Context for Claude Code
 
-You are building the demo infrastructure for a KubeCon NA 2026 talk called "Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes" co-presented by Michael Forrester and Whitney Lee. The demo has two acts: Act 1 deploys an unguarded chatbot and lets the audience break it. Act 2 layers on a CNCF-native guardrails stack and shows the same attacks being blocked, logged, and traced.
+You are building the demo infrastructure for a KubeCon NA 2026 talk called "Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes" co-presented by Whitney Lee and Michael Forrester. The demo has two acts: Act 1 deploys an unguarded chatbot and lets the audience break it. Act 2 layers on a CNCF-native guardrails stack and shows the same attacks being blocked, logged, and traced.
 
 This repo is forked from the kubeauto-idp codebase (EKS-based). Your job is to convert it to GKE and add the AI guardrails stack. Reuse everything that makes sense (ArgoCD app-of-apps, Kyverno, Falco, OTel, Grafana). Replace everything AWS-specific (EKS, VPC, IAM, Secrets Manager) with GCP equivalents (GKE, VPC, Workload Identity Federation, Secret Manager).
 

@@ -11,7 +11,7 @@ decisions remain open.
 
 - **Title:** "Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes"
 - **Event:** KubeCon NA 2026, Salt Lake City
-- **Speakers:** Michael Forrester, Whitney Lee
+- **Speakers:** Whitney Lee, Michael Forrester
 - **Duration:** ~30 minutes (demo runs in ≤25, leaving ~5 for Q&A)
 - **Thesis:** Platform-level governance (policy + runtime + gateway + OTel)
   beats per-developer discipline. The same app, deployed twice, behaves
