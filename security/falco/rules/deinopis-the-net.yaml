@@ -1,0 +1,57 @@
+# ABOUTME: Falco rules that alert when a guarded BurritBot pod attempts something hostile.
+# ABOUTME: Every rule is tagged [deinopis, the-net, ...] so dashboards can filter on the layer.
+---
+- required_engine_version: 0.40.0
+
+- list: deinopis_guarded_namespaces
+  items:
+    - burritbot-guarded
+    - deinopis-net
+
+- macro: deinopis_guarded_pod
+  condition: >
+    k8s.ns.name in (deinopis_guarded_namespaces)
+
+- rule: Deinopis Guarded Pod Shell Spawned
+  desc: >
+    A shell was executed inside a guarded BurritBot or deinopis-net Pod. These
+    Pods are supposed to run a single bounded process and nothing interactive.
+  condition: >
+    spawned_process and
+    deinopis_guarded_pod and
+    proc.name in (sh, bash, zsh, dash, busybox, ash)
+  output: >
+    Shell spawned in guarded Deinopis pod
+    (ns=%k8s.ns.name pod=%k8s.pod.name container=%container.name
+     proc=%proc.name cmdline=%proc.cmdline user=%user.name)
+  priority: CRITICAL
+  tags: [deinopis, the-net, burritbot, guarded, shell]
+
+- rule: Deinopis Guarded Pod Outbound To Non Deinopis Net
+  desc: >
+    A guarded BurritBot pod attempted an outbound TCP connection to something
+    other than the deinopis-net gateway or kube-system DNS.
+  condition: >
+    outbound and
+    deinopis_guarded_pod and
+    k8s.pod.label.app.kubernetes.io/name = "burritbot" and
+    not fd.sip in (deinopis_net_ips)
+  output: >
+    Guarded BurritBot tried to reach non-deinopis-net endpoint
+    (pod=%k8s.pod.name target=%fd.name)
+  priority: WARNING
+  tags: [deinopis, the-net, burritbot, egress]
+
+- rule: Deinopis Guarded Pod Sensitive Mount
+  desc: >
+    A guarded pod started with a sensitive hostPath mount (docker.sock,
+    /etc/kubernetes, /var/run). Guarded workloads must not see the host.
+  condition: >
+    container and
+    deinopis_guarded_pod and
+    container.mount.source in (/var/run/docker.sock, /etc/kubernetes, /var/run/containerd/containerd.sock)
+  output: >
+    Guarded Deinopis pod has sensitive host mount
+    (pod=%k8s.pod.name mount=%container.mount.source)
+  priority: CRITICAL
+  tags: [deinopis, the-net, hostpath, guarded]

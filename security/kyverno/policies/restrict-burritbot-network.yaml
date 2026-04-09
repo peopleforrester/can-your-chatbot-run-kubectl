@@ -1,0 +1,64 @@
+# ABOUTME: Kyverno ClusterPolicy that generates a NetworkPolicy locking guarded BurritBot egress.
+# ABOUTME: Guarded BurritBot can only reach deinopis-net (the gateway) and kube-system DNS.
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-burritbot-network
+  annotations:
+    policies.kyverno.io/title: Restrict Guarded BurritBot Egress
+    policies.kyverno.io/category: Deinopis / The Net
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/subject: NetworkPolicy
+    policies.kyverno.io/description: >-
+      Generates a NetworkPolicy in the burritbot-guarded namespace that
+      restricts egress to deinopis-net (the AI gateway) and kube-system DNS
+      only. If someone deletes the NetworkPolicy by hand, Kyverno re-creates
+      it on the next reconcile — guarded BurritBot cannot escape the net.
+spec:
+  generateExisting: true
+  rules:
+    - name: generate-guarded-burritbot-egress-lock
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+              names:
+                - burritbot-guarded
+      generate:
+        apiVersion: networking.k8s.io/v1
+        kind: NetworkPolicy
+        name: burritbot-guarded-egress-to-deinopis-net
+        namespace: burritbot-guarded
+        synchronize: true
+        data:
+          metadata:
+            labels:
+              deinopis.io/layer: the-net
+              app.kubernetes.io/part-of: deinopis
+          spec:
+            podSelector:
+              matchLabels:
+                app.kubernetes.io/name: burritbot
+            policyTypes:
+              - Egress
+            egress:
+              - to:
+                  - namespaceSelector:
+                      matchLabels:
+                        kubernetes.io/metadata.name: deinopis-net
+                ports:
+                  - protocol: TCP
+                    port: 8080
+                  - protocol: TCP
+                    port: 443
+              - to:
+                  - namespaceSelector:
+                      matchLabels:
+                        kubernetes.io/metadata.name: kube-system
+                ports:
+                  - protocol: UDP
+                    port: 53
+                  - protocol: TCP
+                    port: 53

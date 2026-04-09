@@ -1,0 +1,42 @@
+# ABOUTME: Kyverno ClusterPolicy requiring sidecar containers to be named deinopis-*.
+# ABOUTME: Prevents stray injected sidecars from silently joining the guarded path.
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-deinopis-sidecar-naming
+  annotations:
+    policies.kyverno.io/title: Require deinopis-* Sidecar Naming
+    policies.kyverno.io/category: Deinopis / The Net
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >-
+      Any Pod in burritbot-guarded or deinopis-net that has more than one
+      container must name every non-primary container with the `deinopis-`
+      prefix. This makes it impossible to quietly attach an unblessed sidecar
+      (proxy, logger, debug shell) to a guarded workload.
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+    - name: sidecar-names-must-start-with-deinopis
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - burritbot-guarded
+                - deinopis-net
+      validate:
+        message: >-
+          Sidecar containers in guarded Pods must be named with the
+          `deinopis-` prefix (e.g., deinopis-llm-guard, deinopis-envoy).
+        cel:
+          expressions:
+            - expression: >-
+                size(object.spec.containers) <= 1 ||
+                object.spec.containers[1:].all(c, c.name.startsWith('deinopis-'))
+              message: >-
+                At least one non-primary container is missing the
+                `deinopis-` name prefix.
