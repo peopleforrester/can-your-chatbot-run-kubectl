@@ -8,6 +8,17 @@ live Kyverno + Falco + Envoy smoke tests) is deferred to a session with
 GCP auth and cluster access. Nothing in this repo has touched a live
 cluster yet.
 
+**Recent rewrites (post-Phase-8):**
+- Commit F (`0bd0f34`) — hard rename of the platform identifier from
+  Deinopis to burritbot across 78 files. Labels, namespaces, policy
+  filenames, Falco tags, Terraform resources, test assertions, and
+  package name all rewritten. Spider metaphor prose preserved.
+- Commit G (`43b4db3`) — narrative shift to a lighthearted Act 1.
+  Audience now submits benign off-topic prompts (dance moves, hot dog
+  parties, karaoke); speakers drive the prompt injection / jailbreak /
+  data extraction demonstrations. Colang rail, BanTopics scanner,
+  README, PLAN, and CFP abstract updated to match.
+
 ## Talk Context
 - Talk: "Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes"
 - Venue: KubeCon NA 2026, Salt Lake City
@@ -52,7 +63,7 @@ cluster yet.
 - Phase 6: 7 passed
 - Phase 7: 7 passed
 - Phase 8: 5 passed
-- **Total: 50 static tests green. Live tests skip cleanly when kubeconfig
+- **Total: 51 static tests green. Live tests skip cleanly when kubeconfig
   is absent — no mocks, no fallbacks.**
 
 ## Phase 1 Preconditions (authoritative)
@@ -100,7 +111,7 @@ passes. **Do not green-wash the scorecard.**
 ## Branch & Test Status
 - **Branch**: `staging` (default working branch)
 - **Remote**: `origin → https://github.com/peopleforrester/can-your-chatbot-run-kubectl`
-- **Static tests**: 50 passing, 0 failing, live tests skip when kubeconfig absent
+- **Static tests**: 51 passing, 0 failing, live tests skip when kubeconfig absent
 
 ## Key References
 - `CLAUDE.md` — project Claude Code instructions
