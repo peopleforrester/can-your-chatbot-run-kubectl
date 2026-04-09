@@ -1,0 +1,33 @@
+# ABOUTME: Wave 0: The Eyes — OTel Collector, kube-prometheus-stack, dashboards.
+# ABOUTME: Must be synced before guarded workloads so their spans land somewhere.
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  labels:
+    deinopis.io/layer: the-eyes
+    app.kubernetes.io/part-of: deinopis
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/REPLACE_WITH_OWNER/deinopis-kubecon-2026.git
+    targetRevision: main
+    path: deploy/monitoring
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ServerSideApply=true

@@ -1,0 +1,33 @@
+# ABOUTME: Wave -5: Kyverno admission controller must be alive before policies or workloads.
+# ABOUTME: Policies themselves ship in wave 0 as part of the security app.
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyverno
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
+  labels:
+    deinopis.io/layer: the-net
+    app.kubernetes.io/part-of: deinopis
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://kyverno.github.io/kyverno/
+    chart: kyverno
+    targetRevision: 3.3.*
+    helm:
+      releaseName: kyverno
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: security
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ServerSideApply=true

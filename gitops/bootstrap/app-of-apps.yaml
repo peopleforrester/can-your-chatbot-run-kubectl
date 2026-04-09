@@ -1,0 +1,40 @@
+# ABOUTME: Root ArgoCD Application that bootstraps every child app under gitops/apps/.
+# ABOUTME: Applied once by hand (kubectl apply -f) — after that, ArgoCD owns the whole tree.
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: argocd
+  labels:
+    deinopis.io/layer: the-web
+    app.kubernetes.io/part-of: deinopis
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    # Replace with the real repo URL before `kubectl apply` on the cluster.
+    repoURL: https://github.com/REPLACE_WITH_OWNER/deinopis-kubecon-2026.git
+    targetRevision: main
+    path: gitops/apps
+    directory:
+      recurse: true
+      include: "*.yaml"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

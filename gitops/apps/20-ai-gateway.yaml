@@ -1,0 +1,33 @@
+# ABOUTME: Wave 1: Envoy AI Gateway + NeMo Guardrails + LLM Guard — the active guardrail net.
+# ABOUTME: Lives in deinopis-net so BurritBot traffic passes through a single choke point.
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ai-gateway
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    deinopis.io/layer: the-net
+    app.kubernetes.io/part-of: deinopis
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/REPLACE_WITH_OWNER/deinopis-kubecon-2026.git
+    targetRevision: main
+    path: deploy/ai-gateway
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: deinopis-net
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ServerSideApply=true

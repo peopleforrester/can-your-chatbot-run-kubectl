@@ -1,0 +1,33 @@
+# ABOUTME: Wave 1: BurritBot unguarded and guarded deployments — the actual chatbot workloads.
+# ABOUTME: Both namespaces are driven by a single Application so the demo toggle stays atomic.
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: burritbot
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    deinopis.io/layer: application
+    app.kubernetes.io/part-of: deinopis
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/REPLACE_WITH_OWNER/deinopis-kubecon-2026.git
+    targetRevision: main
+    path: deploy/burritbot
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: burritbot-guarded
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ServerSideApply=true

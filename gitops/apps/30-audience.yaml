@@ -1,0 +1,33 @@
+# ABOUTME: Wave 2: audience-facing frontend + cast-net traffic toggle — last to sync.
+# ABOUTME: Depends on BurritBot and the AI gateway already being Healthy upstream.
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: audience
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  labels:
+    deinopis.io/layer: application
+    app.kubernetes.io/part-of: deinopis
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/REPLACE_WITH_OWNER/deinopis-kubecon-2026.git
+    targetRevision: main
+    path: deploy/audience
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: audience
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ServerSideApply=true
