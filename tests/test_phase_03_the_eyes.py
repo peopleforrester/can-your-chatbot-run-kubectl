@@ -21,11 +21,25 @@ ORBWEAVER_CONFIG = OBS_DIR / "spinybacked-orbweaver" / "config.yaml"
 DASHBOARDS_DIR = OBS_DIR / "grafana" / "dashboards"
 
 GEN_AI_ATTRIBUTES = {
-    "gen_ai.system",
+    # Renamed in OTel semantic conventions v1.37.0 — `gen_ai.system` is
+    # deprecated in favor of `gen_ai.provider.name`. Value `vertex_ai`
+    # became `gcp.vertex_ai` at the same time.
+    "gen_ai.provider.name",
     "gen_ai.request.model",
     "gen_ai.usage.input_tokens",
     "gen_ai.usage.output_tokens",
 }
+
+
+@pytest.mark.static
+def test_otel_collector_forbids_deprecated_gen_ai_system() -> None:
+    """Hard-forbid the deprecated `gen_ai.system` key so we cannot regress."""
+    text = OTEL_CONFIG.read_text(encoding="utf-8")
+    assert "gen_ai.system" not in text, (
+        "otel-collector/config.yaml still references the deprecated "
+        "`gen_ai.system` attribute (renamed to `gen_ai.provider.name` in "
+        "OTel semconv v1.37.0)"
+    )
 
 
 @pytest.mark.static

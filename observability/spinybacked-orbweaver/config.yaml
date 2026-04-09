@@ -18,8 +18,10 @@ source:
 
 # Attribute weights — getting gen_ai.request.model wrong is a much bigger
 # demo failure than missing deinopis.guarded, so weight them accordingly.
+# Note: `gen_ai.provider.name` replaced `gen_ai.system` in OTel semconv
+# v1.37.0; Vertex AI is now identified as `gcp.vertex_ai`.
 weights:
-  gen_ai.system: 1.0
+  gen_ai.provider.name: 1.0
   gen_ai.request.model: 1.0
   gen_ai.usage.input_tokens: 0.8
   gen_ai.usage.output_tokens: 0.8

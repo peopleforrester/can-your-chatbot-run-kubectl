@@ -7,12 +7,15 @@ groups:
     brief: "Generative AI call semantic conventions used by BurritBot + Deinopis."
     prefix: gen_ai
     attributes:
-      - id: gen_ai.system
+      # Renamed in OTel semconv v1.37.0 — was `gen_ai.system` with value
+      # `vertex_ai`; the canonical attribute is now `gen_ai.provider.name`
+      # with Google Cloud values prefixed `gcp.*`.
+      - id: gen_ai.provider.name
         type:
           allow_custom_values: false
           members:
-            - id: vertex_ai
-              value: "vertex_ai"
+            - id: gcp_vertex_ai
+              value: "gcp.vertex_ai"
               brief: "Google Vertex AI (used by BurritBot)."
             - id: openai
               value: "openai"
@@ -21,7 +24,7 @@ groups:
               value: "anthropic"
               brief: "Anthropic API."
         requirement_level: required
-        brief: "Name of the GenAI system vendor."
+        brief: "Name of the GenAI provider."
 
       - id: gen_ai.request.model
         type: string

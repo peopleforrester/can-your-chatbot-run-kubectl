@@ -24,7 +24,7 @@ carry at minimum:
 
 | Attribute | Example | Source |
 |-----------|---------|--------|
-| `gen_ai.system` | `"vertex_ai"` | Instrumentation |
+| `gen_ai.provider.name` | `"gcp.vertex_ai"` | Instrumentation |
 | `gen_ai.request.model` | `"gemini-3-pro"` | Instrumentation |
 | `gen_ai.usage.input_tokens` | `213` | Vertex response |
 | `gen_ai.usage.output_tokens` | `87` | Vertex response |
@@ -52,9 +52,9 @@ processors:
   batch:
     timeout: 5s
     send_batch_size: 1024
-  attributes:              # gen_ai.* enforcement
+  attributes:              # gen_ai.* enforcement (semconv v1.37.0)
     actions:
-      - key: gen_ai.system
+      - key: gen_ai.provider.name
         action: upsert
       - key: gen_ai.request.model
         action: upsert
