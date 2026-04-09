@@ -4,7 +4,7 @@
 groups:
   - id: gen_ai
     type: attribute_group
-    brief: "Generative AI call semantic conventions used by BurritBot + Deinopis."
+    brief: "Generative AI call semantic conventions used by BurritBot + burritbot."
     prefix: gen_ai
     attributes:
       # Renamed in OTel semconv v1.37.0 — was `gen_ai.system` with value
@@ -41,12 +41,12 @@ groups:
         requirement_level: required
         brief: "Number of output tokens returned by the model call."
 
-  - id: deinopis
+  - id: burritbot
     type: attribute_group
-    brief: "Deinopis platform attributes layered on top of gen_ai.*"
-    prefix: deinopis
+    brief: "burritbot platform attributes layered on top of gen_ai.*"
+    prefix: burritbot
     attributes:
-      - id: deinopis.layer
+      - id: burritbot.layer
         type:
           allow_custom_values: false
           members:
@@ -60,9 +60,9 @@ groups:
               value: "the-web"
               brief: "Web/platform layer."
         requirement_level: recommended
-        brief: "Which Deinopis layer emitted this signal."
+        brief: "Which burritbot layer emitted this signal."
 
-      - id: deinopis.guarded
+      - id: burritbot.guarded
         type: boolean
         requirement_level: recommended
         brief: "Whether the call path traverses The Net."

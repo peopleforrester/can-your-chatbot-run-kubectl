@@ -1,6 +1,6 @@
-# Deinopis Scorecard
+# burritbot Scorecard
 
-Honest per-component scorecard for the KubeCon NA 2026 Deinopis
+Honest per-component scorecard for the KubeCon NA 2026 burritbot
 demo build. Update after each component passes its tests. Red cells
 that tell the truth are more useful to the audience than green cells
 that lie.
@@ -59,8 +59,8 @@ that lie.
 
 | CNCF Project | Layer | Version | Status | Notes |
 |--------------|-------|---------|--------|-------|
-| Kyverno | The Net | chart 3.7.1 / app 1.17+ | RED | CEL expressions for deinopis.io labels |
-| Falco | The Net | 0.43.x / rules engine 0.57.0 | RED | modern-bpf driver, deinopis tags |
+| Kyverno | The Net | chart 3.7.1 / app 1.17+ | RED | CEL expressions for burritbot.io labels |
+| Falco | The Net | 0.43.x / rules engine 0.57.0 | RED | modern-bpf driver, burritbot tags |
 
 ### Phase 5 — The Net (AI Gateway)
 

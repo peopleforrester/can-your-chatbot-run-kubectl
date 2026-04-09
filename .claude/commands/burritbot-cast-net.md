@@ -1,9 +1,9 @@
-# Deinopis Cast Net $ARGUMENTS
+# burritbot Cast Net $ARGUMENTS
 
 Run the live traffic toggle for BurritBot. `$ARGUMENTS` is one of:
 
 - `cast` — route audience traffic through the guarded path
-  (`deinopis-net` → NeMo Guardrails → LLM Guard → Envoy → Vertex)
+  (`burritbot-net` → NeMo Guardrails → LLM Guard → Envoy → Vertex)
 - `recall` — route audience traffic directly to `burritbot-unguarded`
 - `status` — show the current route target
 - `rehearse` — run the full Act 1 → Act 2 rehearsal sequence
@@ -18,7 +18,7 @@ Before running anything, verify:
    ```bash
    kubectl config current-context
    ```
-4. The HTTPRoute `burritbot-audience` exists in namespace `deinopis-net`
+4. The HTTPRoute `burritbot-audience` exists in namespace `burritbot-net`
 
 If any precondition fails, print what is missing and stop. Do not
 auto-fix — this command runs on stage, and surprises are worse than

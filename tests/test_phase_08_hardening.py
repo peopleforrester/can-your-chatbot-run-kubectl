@@ -42,7 +42,7 @@ def test_runbook_exists_and_has_all_sections() -> None:
 
 @pytest.mark.static
 def test_scorecard_exists_with_cncf_columns() -> None:
-    """docs/SCORECARD.md exists and enumerates CNCF projects by Deinopis layer."""
+    """docs/SCORECARD.md exists and enumerates CNCF projects by burritbot layer."""
     assert SCORECARD.exists(), "docs/SCORECARD.md is missing"
     text = SCORECARD.read_text(encoding="utf-8")
     missing = [h for h in REQUIRED_SCORECARD_HEADERS if h not in text]

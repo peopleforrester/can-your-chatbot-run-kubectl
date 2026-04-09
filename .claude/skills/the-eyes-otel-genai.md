@@ -29,8 +29,8 @@ carry at minimum:
 | `gen_ai.request.model` | `"gemini-3-pro"` | Instrumentation |
 | `gen_ai.usage.input_tokens` | `213` | Vertex response |
 | `gen_ai.usage.output_tokens` | `87` | Vertex response |
-| `deinopis.layer` | `"the-net"` \| `"the-eyes"` \| `"the-web"` | Resource attribute |
-| `deinopis.guarded` | `true` \| `false` | Resource attribute |
+| `burritbot.layer` | `"the-net"` \| `"the-eyes"` \| `"the-web"` | Resource attribute |
+| `burritbot.guarded` | `true` \| `false` | Resource attribute |
 
 The Weaver registry (`observability/otel-weaver/genai-semconv-registry.yaml`)
 declares these as required. CI runs `weaver registry check` to enforce.
@@ -65,7 +65,7 @@ processors:
         action: upsert
   resource:
     attributes:
-      - { key: deinopis.layer, value: the-eyes, action: upsert }
+      - { key: burritbot.layer, value: the-eyes, action: upsert }
 
 exporters:
   prometheus:              # serves /metrics for the kube-prometheus-stack scraper
@@ -110,7 +110,7 @@ score_threshold: 0.85
 watch_namespaces:
   - burritbot-unguarded
   - burritbot-guarded
-  - deinopis-net
+  - burritbot-net
 ```
 
 The threshold is the floor that "The Eyes" alert on. Unguarded

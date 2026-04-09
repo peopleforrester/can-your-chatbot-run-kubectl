@@ -50,7 +50,7 @@ Live:
   but the rate limit must be a literal `10/minute` or
   `RATE_LIMIT = 10`
 - `cast-net.sh` uses `kubectl patch --type=json` on an HTTPRoute in
-  `deinopis-net`, not `kubectl apply` — the runbook rehearsal target
+  `burritbot-net`, not `kubectl apply` — the runbook rehearsal target
   is under 500ms
 - QR code is generated at page load via JS from the venue URL, or
   pre-baked into `static/` — either way, no secrets in the frontend

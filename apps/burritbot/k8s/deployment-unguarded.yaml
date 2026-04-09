@@ -8,22 +8,22 @@ metadata:
   namespace: burritbot-unguarded
   labels:
     app.kubernetes.io/name: burritbot
-    app.kubernetes.io/part-of: deinopis
-    deinopis.io/layer: application
-    deinopis.io/guarded: "false"
+    app.kubernetes.io/part-of: burritbot
+    burritbot.io/layer: application
+    burritbot.io/guarded: "false"
 spec:
   replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: burritbot
-      deinopis.io/guarded: "false"
+      burritbot.io/guarded: "false"
   template:
     metadata:
       labels:
         app.kubernetes.io/name: burritbot
-        app.kubernetes.io/part-of: deinopis
-        deinopis.io/layer: application
-        deinopis.io/guarded: "false"
+        app.kubernetes.io/part-of: burritbot
+        burritbot.io/layer: application
+        burritbot.io/guarded: "false"
     spec:
       serviceAccountName: burritbot
       automountServiceAccountToken: true
@@ -35,7 +35,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: burritbot
-          image: us-west1-docker.pkg.dev/REPLACE_WITH_PROJECT/deinopis/burritbot:0.1.0
+          image: us-west1-docker.pkg.dev/REPLACE_WITH_PROJECT/burritbot/burritbot:0.1.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

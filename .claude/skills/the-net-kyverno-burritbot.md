@@ -1,4 +1,4 @@
-# The Net — Kyverno Policies (Deinopis Flavour)
+# The Net — Kyverno Policies (burritbot Flavour)
 
 ## Version Pins
 
@@ -11,32 +11,32 @@
 The Net's admission-time enforcement happens here. Three policies are
 load-bearing for the demo; every other Kyverno policy is bonus:
 
-1. `require-deinopis-labels` — every Pod in the BurritBot namespaces
-   must carry `deinopis.io/layer`, `deinopis.io/model-source`,
-   `deinopis.io/model-hash`. Unlabelled workloads get rejected.
-2. `require-deinopis-sidecar-naming` — any sidecar container must have a
-   name starting with `deinopis-`. This is how you know at a glance
+1. `require-burritbot-labels` — every Pod in the BurritBot namespaces
+   must carry `burritbot.io/layer`, `burritbot.io/model-source`,
+   `burritbot.io/model-hash`. Unlabelled workloads get rejected.
+2. `require-burritbot-sidecar-naming` — any sidecar container must have a
+   name starting with `burritbot-`. This is how you know at a glance
    whether a pod has The Net applied.
 3. `restrict-burritbot-network` — the guarded BurritBot namespace can
-   only talk to `deinopis-net`. No direct egress to Vertex AI, no
+   only talk to `burritbot-net`. No direct egress to Vertex AI, no
    shortcut around the gateway.
 
 Phase 4 tests fail until these three policies exist with these exact
 filenames under `security/kyverno/policies/`.
 
-## Policy Skeleton — require-deinopis-labels
+## Policy Skeleton — require-burritbot-labels
 
 ```yaml
-# ABOUTME: Kyverno policy — require deinopis.io labels on BurritBot pods.
+# ABOUTME: Kyverno policy — require burritbot.io labels on BurritBot pods.
 # ABOUTME: Rejects admission if layer / model-source / model-hash are missing.
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: require-deinopis-labels
+  name: require-burritbot-labels
   annotations:
-    policies.kyverno.io/title: Require deinopis.io labels
-    policies.kyverno.io/category: deinopis
-    deinopis.io/layer: the-net
+    policies.kyverno.io/title: Require burritbot.io labels
+    policies.kyverno.io/category: burritbot
+    burritbot.io/layer: the-net
 spec:
   validationFailureAction: Enforce
   background: true
@@ -49,55 +49,55 @@ spec:
               namespaces:
                 - burritbot-unguarded
                 - burritbot-guarded
-                - deinopis-net
+                - burritbot-net
       validate:
         message: >-
           Pods in BurritBot namespaces must carry
-          deinopis.io/layer, deinopis.io/model-source, and
-          deinopis.io/model-hash labels.
+          burritbot.io/layer, burritbot.io/model-source, and
+          burritbot.io/model-hash labels.
         cel:
           expressions:
             - expression: >
                 has(object.metadata.labels) &&
-                has(object.metadata.labels['deinopis.io/layer']) &&
-                has(object.metadata.labels['deinopis.io/model-source']) &&
-                has(object.metadata.labels['deinopis.io/model-hash'])
+                has(object.metadata.labels['burritbot.io/layer']) &&
+                has(object.metadata.labels['burritbot.io/model-source']) &&
+                has(object.metadata.labels['burritbot.io/model-hash'])
 ```
 
 The CEL check — *not* a `pattern:` match — is the shape we want.
 It's faster, and it gives a better audience demo when you
 `kubectl apply` a pod without the labels.
 
-## Policy Skeleton — require-deinopis-sidecar-naming
+## Policy Skeleton — require-burritbot-sidecar-naming
 
 ```yaml
-# ABOUTME: Kyverno policy — sidecar containers must be named deinopis-*.
+# ABOUTME: Kyverno policy — sidecar containers must be named burritbot-*.
 # ABOUTME: Makes The Net visible via container naming on every pod.
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: require-deinopis-sidecar-naming
+  name: require-burritbot-sidecar-naming
   annotations:
-    deinopis.io/layer: the-net
+    burritbot.io/layer: the-net
 spec:
   validationFailureAction: Enforce
   rules:
-    - name: sidecars-must-be-deinopis-prefixed
+    - name: sidecars-must-be-burritbot-prefixed
       match:
         any:
           - resources:
               kinds: [Pod]
-              namespaces: [deinopis-net]
+              namespaces: [burritbot-net]
       validate:
         message: >-
-          Every container in deinopis-net after index 0 must be named
-          with the deinopis- prefix.
+          Every container in burritbot-net after index 0 must be named
+          with the burritbot- prefix.
         cel:
           expressions:
             - expression: >
                 object.spec.containers.all(c,
                   c == object.spec.containers[0] ||
-                  c.name.startsWith('deinopis-'))
+                  c.name.startsWith('burritbot-'))
 ```
 
 ## Policy Skeleton — restrict-burritbot-network
@@ -108,13 +108,13 @@ than a validation rule — the audience sees the restriction on the
 
 ```yaml
 # ABOUTME: Kyverno policy — generate NetworkPolicy limiting guarded BurritBot.
-# ABOUTME: The guarded namespace may only talk to deinopis-net.
+# ABOUTME: The guarded namespace may only talk to burritbot-net.
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: restrict-burritbot-network
   annotations:
-    deinopis.io/layer: the-net
+    burritbot.io/layer: the-net
 spec:
   generateExisting: true
   rules:
@@ -127,7 +127,7 @@ spec:
       generate:
         apiVersion: networking.k8s.io/v1
         kind: NetworkPolicy
-        name: burritbot-guarded-egress-deinopis-net
+        name: burritbot-guarded-egress-burritbot-net
         namespace: burritbot-guarded
         data:
           spec:
@@ -137,7 +137,7 @@ spec:
               - to:
                   - namespaceSelector:
                       matchLabels:
-                        kubernetes.io/metadata.name: deinopis-net
+                        kubernetes.io/metadata.name: burritbot-net
 ```
 
 ## Kyverno Tests (true TDD)
@@ -147,7 +147,7 @@ policy. Layout:
 
 ```
 security/kyverno/tests/
-  require-deinopis-labels/
+  require-burritbot-labels/
     kyverno-test.yaml       # test manifest
     good-pod.yaml           # should PASS (has all labels)
     missing-label-pod.yaml  # should FAIL
@@ -159,13 +159,13 @@ commit.
 ## Common Mistakes
 
 1. **Validating in the kube-system or kyverno namespaces.** Always
-   scope to the BurritBot or `deinopis-net` namespaces. The demo never
+   scope to the BurritBot or `burritbot-net` namespaces. The demo never
    touches system namespaces.
 2. **Using `pattern:` when `cel:` works.** The `cel:` block produces
    a cleaner rejection message and is what 1.13+ expects.
 3. **Forgetting `validationFailureAction: Enforce`.** Audit mode means
    the policy fires in logs but lets the pod in — which kills the demo
    punch line.
-4. **Missing the `deinopis.io/layer: the-net` annotation on the policy
+4. **Missing the `burritbot.io/layer: the-net` annotation on the policy
    itself.** The scorecard groups policies by layer via this
    annotation.

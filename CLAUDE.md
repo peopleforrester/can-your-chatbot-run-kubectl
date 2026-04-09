@@ -1,18 +1,19 @@
-# Deinopis — KubeCon NA 2026 Demo Platform
+# burritbot — KubeCon NA 2026 Demo Platform
 # "Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes"
 
 ## What This Is
 A GKE cluster running a complete AI guardrails demo for a KubeCon talk.
-Two modes: UNGUARDED (chatbot with no protections) and GUARDED (full Deinopis stack active).
+Two modes: UNGUARDED (chatbot with no protections) and GUARDED (full burritbot stack active).
 The audience interacts with both via a web frontend and watches the difference on Grafana in real-time.
 
 Talk: **"Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes"** —
 KubeCon NA 2026, Salt Lake City. Co-presenters: Whitney Lee and Michael Forrester.
 
 ## Architecture Metaphor — The Ogre-Faced Spider
-Deinopis (the ogre-faced spider) does not build a passive web. It holds a net
-between its front legs, watches with the largest eyes of any spider, and
-actively casts the net over anything that walks underneath.
+The ogre-faced spider does not build a passive web. It holds a net between
+its front legs, watches with the largest eyes of any spider, and actively
+casts the net over anything that walks underneath. Burritbot's guardrails
+are that net; spinybacked-orbweaver is the pair of eyes.
 
 - **The Eyes** = OpenTelemetry GenAI conventions + spinybacked-orbweaver
   (Whitney's auto-instrumentation agent, OTel Weaver as schema contract)
@@ -22,7 +23,7 @@ actively casts the net over anything that walks underneath.
   External Secrets, GKE Workload Identity Federation
 
 Two spiders, two roles, one architecture: spinybacked-orbweaver instruments,
-Deinopis enforces.
+the burritbot guardrails stack enforces.
 
 The chatbot itself keeps its friendly name — **BurritBot** — because the whole
 demo narrative is the Chipotle viral-chatbot incident.
@@ -56,12 +57,13 @@ for the per-file copy/adapt/extend/ignore map.
   DaemonSet + privileged container support)
 - **Workload Identity Federation** for all service accounts (no JSON key files)
 - **Vertex AI** as the inference backend (not self-hosted model) for demo reliability
-- **Gemini 2.5 Flash** as the default model (Gemini 1.5 Flash is unsupported;
-  Gemini 2.0 Flash is deprecated and shuts down 2026-06-01; Gemini 3 Flash
-  is preview-tier and not used for a live demo)
+- **Gemini 3 Pro** as the default model via the `google-genai` SDK with
+  `vertexai=True` (Gemini 1.5 is unsupported; 2.0 Flash is retired; 2.5
+  Flash/Pro retire 2026-10-16 — four weeks before the talk; 3 Flash is
+  preview-tier; 3 Pro is the only Vertex AI model guaranteed live on demo day)
 - **ArgoCD app-of-apps** with sync waves for deployment ordering
 - **Two namespaces** for the chatbot: `burritbot-unguarded` and `burritbot-guarded`
-- **`deinopis-net` namespace** for the guardrails stack (NeMo, LLM Guard,
+- **`burritbot-net` namespace** for the guardrails stack (NeMo, LLM Guard,
   Envoy AI Gateway)
 - **Single Grafana instance** with split dashboards showing both versions
   side-by-side
@@ -101,11 +103,11 @@ for the per-file copy/adapt/extend/ignore map.
 - Every Helm chart gets a `values.yaml` in `gitops/apps/<component>/`.
 - Test before commit. If tests fail, do not commit.
 - All Kyverno policies must be in Audit mode first, then Enforce after validation.
-- Falco rules must have explicit priority levels and `deinopis` tags.
+- Falco rules must have explicit priority levels and `burritbot` tags.
 - OTel collector config must include the GenAI semantic convention processors.
 - Guardrails sidecar containers in `burritbot-guarded` pods must be named
-  `deinopis-*` (enforced by Kyverno `require-guardrails-sidecar.yaml`).
-- AI-workload resources carry `deinopis.io/*` labels and annotations for
+  `burritbot-*` (enforced by Kyverno `require-guardrails-sidecar.yaml`).
+- AI-workload resources carry `burritbot.io/*` labels and annotations for
   provenance, layer tagging, and policy selection.
 
 ## TDD Protocol (5-step cycle, carried over from kubeauto-idp)

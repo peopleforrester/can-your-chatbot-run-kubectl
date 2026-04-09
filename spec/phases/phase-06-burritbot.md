@@ -3,10 +3,10 @@
 **Goal:** FastAPI chatbot wrapping Vertex AI `gemini-3-pro` via the
 `google-genai` SDK (`vertexai=True`), deployed twice — once in
 `burritbot-unguarded` (bypasses the gateway) and once in
-`burritbot-guarded` (routes through `deinopis-net`). Same container
+`burritbot-guarded` (routes through `burritbot-net`). Same container
 image for both.
 
-**Inputs:** Phase 5 complete. `deinopis-net` is serving the AI
+**Inputs:** Phase 5 complete. `burritbot-net` is serving the AI
 gateway. `burritbot-unguarded` and `burritbot-guarded` namespaces
 exist.
 
@@ -19,7 +19,7 @@ exist.
 - `apps/burritbot/k8s/deployment-unguarded.yaml` — namespace
   `burritbot-unguarded`
 - `apps/burritbot/k8s/deployment-guarded.yaml` — namespace
-  `burritbot-guarded`, with full `deinopis.io/*` label set
+  `burritbot-guarded`, with full `burritbot.io/*` label set
 - `apps/burritbot/k8s/service-unguarded.yaml`
 - `apps/burritbot/k8s/service-guarded.yaml`
 - `gitops/apps/burritbot-unguarded.yaml`, `gitops/apps/burritbot-guarded.yaml`
@@ -37,7 +37,7 @@ Static:
 - `test_burritbot_manifests_present` — four required manifests
 - `test_burritbot_unguarded_deployment_valid` — kind Deployment in
   `burritbot-unguarded`
-- `test_burritbot_guarded_deployment_has_deinopis_labels` — full
+- `test_burritbot_guarded_deployment_has_burritbot_labels` — full
   three-label set on metadata
 - `test_burritbot_dockerfile_has_aboutme`
 

@@ -1,18 +1,18 @@
-# ABOUTME: VPC network and subnet for the Deinopis GKE cluster.
+# ABOUTME: VPC network and subnet for the burritbot GKE cluster.
 # ABOUTME: Private nodes with secondary ranges for pods and services.
 
-resource "google_compute_network" "deinopis" {
+resource "google_compute_network" "burritbot" {
   name                            = var.network_name
   auto_create_subnetworks         = false
   routing_mode                    = "REGIONAL"
   delete_default_routes_on_create = false
 }
 
-resource "google_compute_subnetwork" "deinopis" {
+resource "google_compute_subnetwork" "burritbot" {
   name                     = var.subnet_name
   ip_cidr_range            = var.subnet_cidr
   region                   = var.region
-  network                  = google_compute_network.deinopis.id
+  network                  = google_compute_network.burritbot.id
   private_ip_google_access = true
 
   secondary_ip_range {
@@ -26,15 +26,15 @@ resource "google_compute_subnetwork" "deinopis" {
   }
 }
 
-resource "google_compute_router" "deinopis" {
+resource "google_compute_router" "burritbot" {
   name    = "${var.network_name}-router"
-  network = google_compute_network.deinopis.id
+  network = google_compute_network.burritbot.id
   region  = var.region
 }
 
-resource "google_compute_router_nat" "deinopis" {
+resource "google_compute_router_nat" "burritbot" {
   name                               = "${var.network_name}-nat"
-  router                             = google_compute_router.deinopis.name
+  router                             = google_compute_router.burritbot.name
   region                             = var.region
   nat_ip_allocate_option             = "AUTO_ONLY"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"

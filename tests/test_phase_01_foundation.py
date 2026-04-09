@@ -193,7 +193,7 @@ def test_nodes_ready(k8s_core_v1) -> None:
 
 @pytest.mark.live
 def test_namespaces_exist(k8s_core_v1) -> None:
-    """All expected Deinopis namespaces exist."""
+    """All expected burritbot namespaces exist."""
     namespaces = k8s_core_v1.list_namespace()
     ns_names = {ns.metadata.name for ns in namespaces.items}
     missing = [ns for ns in EXPECTED_NAMESPACES if ns not in ns_names]

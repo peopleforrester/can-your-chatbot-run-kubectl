@@ -1,6 +1,6 @@
-# Deinopis Phase $ARGUMENTS
+# burritbot Phase $ARGUMENTS
 
-You are building Phase $ARGUMENTS of the Deinopis platform.
+You are building Phase $ARGUMENTS of the burritbot platform.
 
 ## Step 0 — Load context
 
@@ -9,13 +9,13 @@ Read in order:
 1. `CLAUDE.md` — project-level rules (non-negotiable architecture decisions)
 2. `PROJECT_STATE.md` — current status and resolved Phase 1 preconditions
 3. `docs/BUILD-INSTRUCTIONS.md` — authoritative spec (verbatim from the
-   Deinopis plan)
+   burritbot plan)
 4. `docs/PLAN.md` — phase-by-phase execution plan
 5. `spec/phases/phase-0$ARGUMENTS-*.md` — phase spec (if present)
-6. `.claude/skills/deinopis-architecture.md` — the ogre-faced spider metaphor
+6. `.claude/skills/burritbot-architecture.md` — the ogre-faced spider metaphor
 7. The skill file matching the component for this phase:
    - Phase 3 → `.claude/skills/the-eyes-otel-genai.md`
-   - Phase 4 → `.claude/skills/the-net-kyverno-deinopis.md`
+   - Phase 4 → `.claude/skills/the-net-kyverno-burritbot.md`
    - Phase 5 → `.claude/skills/the-net-ai-gateway.md`
    - Phase 6 → `.claude/skills/burritbot-vertex-ai.md`
    - Phase 7 → `.claude/skills/cast-net-toggle.md`
@@ -99,6 +99,6 @@ fast-forward main.
 - No mocks, stubs, or fallbacks. Tests hit real resources or they
   skip explicitly.
 - No secrets committed. Use Secret Manager + External Secrets.
-- `deinopis.io/*` labels are required on every BurritBot manifest.
-- `deinopis-*` sidecar naming is required in `deinopis-net`.
+- `burritbot.io/*` labels are required on every BurritBot manifest.
+- `burritbot-*` sidecar naming is required in `burritbot-net`.
 - `cast-net.sh` is the live toggle name — never rename it.

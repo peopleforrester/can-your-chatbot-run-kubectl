@@ -8,14 +8,14 @@ metadata:
   namespace: burritbot-unguarded
   labels:
     app.kubernetes.io/name: burritbot
-    app.kubernetes.io/part-of: deinopis
-    deinopis.io/layer: application
-    deinopis.io/guarded: "false"
+    app.kubernetes.io/part-of: burritbot
+    burritbot.io/layer: application
+    burritbot.io/guarded: "false"
 spec:
   type: ClusterIP
   selector:
     app.kubernetes.io/name: burritbot
-    deinopis.io/guarded: "false"
+    burritbot.io/guarded: "false"
   ports:
     - name: http
       port: 8080

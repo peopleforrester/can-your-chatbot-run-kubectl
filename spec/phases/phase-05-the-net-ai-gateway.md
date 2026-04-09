@@ -1,12 +1,12 @@
 # Phase 5: The Net — AI Gateway (NeMo + LLM Guard + Envoy)
 
-**Goal:** Content-aware enforcement running in the `deinopis-net`
+**Goal:** Content-aware enforcement running in the `burritbot-net`
 namespace. Every call on the guarded path traverses NeMo Guardrails
 Colang rails, LLM Guard input and output scanners, and an Envoy AI
 Gateway route before reaching Vertex AI.
 
-**Inputs:** Phase 4 complete. `deinopis-net` namespace exists and
-Kyverno is enforcing the deinopis.io label set and the deinopis-*
+**Inputs:** Phase 4 complete. `burritbot-net` namespace exists and
+Kyverno is enforcing the burritbot.io label set and the burritbot-*
 sidecar naming convention.
 
 **Outputs:**
@@ -35,7 +35,7 @@ Static:
 - `test_llm_guard_declares_input_and_output_scanners` — both lists
   non-empty
 - `test_envoy_ai_gateway_manifest_exists`
-- `test_guarded_path_namespace_is_deinopis_net` — no legacy
+- `test_guarded_path_namespace_is_burritbot_net` — no legacy
   `guardrails` namespace references anywhere under `ai-gateway/`
 
 Live:
@@ -48,7 +48,7 @@ Live:
 - NeMo Guardrails 0.11+ with Colang 2.0
 - LLM Guard 0.3.17+ — always run both input and output scanners
 - Envoy AI Gateway 0.2+, Gateway API v1.2
-- All three live in the **`deinopis-net`** namespace. The name
+- All three live in the **`burritbot-net`** namespace. The name
   `guardrails` is from an earlier draft; a Phase 5 test greps for it
   and fails.
 

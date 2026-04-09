@@ -1,9 +1,9 @@
 # ABOUTME: LLM Guard 0.3.17+ scanner config — both input and output scanners are populated.
-# ABOUTME: Loaded by the llm-guard container in the deinopis-net gateway pod.
+# ABOUTME: Loaded by the llm-guard container in the burritbot-net gateway pod.
 ---
 app:
-  name: deinopis-llm-guard
-  namespace: deinopis-net
+  name: burritbot-llm-guard
+  namespace: burritbot-net
   log_level: INFO
 
 cache:

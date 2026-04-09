@@ -1,6 +1,6 @@
-# Deinopis Validate $ARGUMENTS
+# burritbot Validate $ARGUMENTS
 
-Run the validation loop for the Deinopis build. `$ARGUMENTS` is either
+Run the validation loop for the burritbot build. `$ARGUMENTS` is either
 a phase number (`3`, `4`, …, `8`) or `all` to validate every phase.
 
 ## Static validation (always runs)

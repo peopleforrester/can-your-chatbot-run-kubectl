@@ -39,8 +39,8 @@ def test_app_of_apps_manifest_valid() -> None:
 
 
 @pytest.mark.static
-def test_namespaces_manifest_includes_deinopis_net() -> None:
-    """gitops/namespaces/namespaces.yaml creates the deinopis-net namespace."""
+def test_namespaces_manifest_includes_burritbot_net() -> None:
+    """gitops/namespaces/namespaces.yaml creates the burritbot-net namespace."""
     path = NAMESPACES_DIR / "namespaces.yaml"
     assert path.exists(), "namespaces.yaml is missing"
     docs = list(yaml.safe_load_all(path.read_text(encoding="utf-8")))
@@ -49,7 +49,7 @@ def test_namespaces_manifest_includes_deinopis_net() -> None:
         "argocd",
         "monitoring",
         "security",
-        "deinopis-net",
+        "burritbot-net",
         "burritbot-unguarded",
         "burritbot-guarded",
         "audience",

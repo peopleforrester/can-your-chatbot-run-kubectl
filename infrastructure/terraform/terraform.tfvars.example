@@ -6,4 +6,4 @@ project_id = "REPLACE_WITH_YOUR_GCP_PROJECT_ID"
 
 # Optional — defaults are in variables.tf.
 region       = "us-west1"
-cluster_name = "deinopis"
+cluster_name = "burritbot"

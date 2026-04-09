@@ -1,4 +1,4 @@
-# ABOUTME: Namespace manifest for the Deinopis platform; owned by the root app-of-apps.
+# ABOUTME: Namespace manifest for the burritbot platform; owned by the root app-of-apps.
 # ABOUTME: Creates the seven namespaces that every other manifest assumes exists.
 ---
 apiVersion: v1
@@ -6,55 +6,55 @@ kind: Namespace
 metadata:
   name: argocd
   labels:
-    deinopis.io/layer: the-web
-    app.kubernetes.io/part-of: deinopis
+    burritbot.io/layer: the-web
+    app.kubernetes.io/part-of: burritbot
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: monitoring
   labels:
-    deinopis.io/layer: the-eyes
-    app.kubernetes.io/part-of: deinopis
+    burritbot.io/layer: the-eyes
+    app.kubernetes.io/part-of: burritbot
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: security
   labels:
-    deinopis.io/layer: the-net
-    app.kubernetes.io/part-of: deinopis
+    burritbot.io/layer: the-net
+    app.kubernetes.io/part-of: burritbot
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: deinopis-net
+  name: burritbot-net
   labels:
-    deinopis.io/layer: the-net
-    app.kubernetes.io/part-of: deinopis
+    burritbot.io/layer: the-net
+    app.kubernetes.io/part-of: burritbot
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: burritbot-unguarded
   labels:
-    deinopis.io/layer: application
-    deinopis.io/guarded: "false"
-    app.kubernetes.io/part-of: deinopis
+    burritbot.io/layer: application
+    burritbot.io/guarded: "false"
+    app.kubernetes.io/part-of: burritbot
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: burritbot-guarded
   labels:
-    deinopis.io/layer: application
-    deinopis.io/guarded: "true"
-    app.kubernetes.io/part-of: deinopis
+    burritbot.io/layer: application
+    burritbot.io/guarded: "true"
+    app.kubernetes.io/part-of: burritbot
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: audience
   labels:
-    deinopis.io/layer: application
-    app.kubernetes.io/part-of: deinopis
+    burritbot.io/layer: application
+    app.kubernetes.io/part-of: burritbot

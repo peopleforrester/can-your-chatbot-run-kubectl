@@ -38,7 +38,7 @@ This is funny when it is a burrito bot. It is less funny when it is your company
 
 Here is the thing that makes this solvable instead of terrifying: most of these organizations already run the CNCF projects that close this gap. Kyverno is already enforcing policies. Falco is already watching runtime behavior. OpenTelemetry is already tracing requests. Envoy is already managing traffic. The tools are deployed. They just have not been wired to the inference layer yet. The gap between "we deployed an LLM" and "we govern our LLM" is about 20% more configuration on infrastructure you already own.
 
-Whitney Lee and Michael Forrester prove this live. They build a chatbot on stage, deploy it to Kubernetes naked, and hand it to the audience. Break it. Ask it to write code. Ask it to run kubectl. Watch every prompt sail through with zero resistance. Then they deploy the Deinopis guardrails stack onto the same cluster and the same chatbot. Same model, same system prompt, completely different outcome. The audience watches the same attacks get caught, logged, and traced in real-time on a Grafana dashboard.
+Whitney Lee and Michael Forrester prove this live. They build a chatbot on stage, deploy it to Kubernetes naked, and hand it to the audience. Break it. Ask it to write code. Ask it to run kubectl. Watch every prompt sail through with zero resistance. Then they deploy the burritbot guardrails stack onto the same cluster and the same chatbot. Same model, same system prompt, completely different outcome. The audience watches the same attacks get caught, logged, and traced in real-time on a Grafana dashboard.
 
 Most spiders build a passive web and wait. The ogre-faced spider does something different. It holds a net between its front legs, watches with the largest eyes of any spider, and actively throws the net over anything that walks underneath. That is the architecture this talk builds. OpenTelemetry and Whitney's spinybacked-orbweaver give the platform its eyes. Kyverno, Falco, NeMo Guardrails, and LLM Guard give it the net. The platform does not sit passively hoping bad prompts hit a rule. It sees everything and catches what does not belong.
 
@@ -54,7 +54,7 @@ Most existing KubeCon talks about AI guardrails fall into two categories: vendor
 
 The viral chatbot incidents (Chipotle, Chevrolet, DPD, Air Canada) are not security conference war stories. They are architecture failures that CNCF projects can prevent. Connecting those stories to specific Kyverno policies, Falco rules, and OTel trace configurations gives the community a reusable pattern for LLM governance that does not require adopting new tools.
 
-The demo architecture maps to the ogre-faced spider's hunting strategy: OpenTelemetry and spinybacked-orbweaver provide the eyes (schema-validated, auto-instrumented observability into every prompt), while the enforcement stack (NeMo Guardrails, LLM Guard, Kyverno, Falco) provides the net (actively cast over each request). Two spiders, two roles, one architecture. Whitney's spinybacked-orbweaver handles instrumentation. Deinopis handles enforcement.
+The demo architecture maps to the ogre-faced spider's hunting strategy: OpenTelemetry and spinybacked-orbweaver provide the eyes (schema-validated, auto-instrumented observability into every prompt), while the enforcement stack (NeMo Guardrails, LLM Guard, Kyverno, Falco) provides the net (actively cast over each request). Two spiders, two roles, one architecture. Whitney's spinybacked-orbweaver handles instrumentation. burritbot handles enforcement.
 
 Whitney Lee brings two KubeCon keynotes, the Choose Your Own Adventure series, and CNCF Ambassador status. Michael Forrester brings patterns from training 1,000,000+ cloud-native learners at KodeKloud (a CNCF Training Partner), the real-world incident where an AI agent deleted his Kubernetes cluster, and experience running workshops at KCD Texas, KubeAuto AI Day Europe, and Cloud Native University at KubeCon EU. Together they bridge storytelling with technical depth in a format the KubeCon audience responds to.
 
@@ -115,7 +115,7 @@ Platform engineers and SREs who already run Kubernetes with policy and observabi
 1. Understand why LLM-powered chatbots comply with off-topic requests and what that means for any LLM connected to internal tools or APIs
 2. See a complete before-and-after demonstration of an unguarded versus guarded inference deployment on Kubernetes using CNCF projects
 3. Learn the specific Kyverno policies, Falco rules, and OTel trace configurations needed to extend existing platform governance to LLM workloads
-4. Walk away with the Deinopis repo containing the full demo stack (Terraform/GKE, Helm charts, Colang rules, Falco rules, OTel collector config, Grafana dashboards) ready to deploy
+4. Walk away with the burritbot repo containing the full demo stack (Terraform/GKE, Helm charts, Colang rules, Falco rules, OTel collector config, Grafana dashboards) ready to deploy
 
 ---
 

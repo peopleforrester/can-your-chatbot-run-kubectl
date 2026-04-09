@@ -3,7 +3,7 @@
 **Goal:** GKE Standard cluster running with VPC, WIF, Secret Manager,
 and a working kubeconfig.
 
-**Inputs:** Empty GCP project `deinopis-kubecon-2026` (placeholder) in
+**Inputs:** Empty GCP project `burritbot-kubecon-2026` (placeholder) in
 region `us-west1` with admin credentials and the Vertex AI + GKE +
 Container Registry APIs enabled.
 
@@ -43,7 +43,7 @@ Live (skip when terraform / GCP auth absent):
   Standard mode, WIF pool set, NAP enabled
 - `test_nodes_ready` — at least 2 nodes Ready
 - `test_namespaces_exist` — `argocd`, `monitoring`, `security`,
-  `deinopis-net`, `burritbot-unguarded`, `burritbot-guarded`, `audience`
+  `burritbot-net`, `burritbot-unguarded`, `burritbot-guarded`, `audience`
 
 **Key Technology Decisions:**
 
@@ -62,7 +62,7 @@ autoscaling.
 
 **Completion Promise:** `<promise>PHASE1_DONE</promise>`
 
-**Skill:** none — Terraform HCL is not Deinopis-specific. Refer to
+**Skill:** none — Terraform HCL is not burritbot-specific. Refer to
 the Google provider docs.
 
 **Commits:** 3 expected (Terraform scaffold; GKE + VPC; IAM + Secret

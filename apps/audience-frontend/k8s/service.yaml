@@ -8,8 +8,8 @@ metadata:
   namespace: audience
   labels:
     app.kubernetes.io/name: audience-frontend
-    app.kubernetes.io/part-of: deinopis
-    deinopis.io/layer: application
+    app.kubernetes.io/part-of: burritbot
+    burritbot.io/layer: application
 spec:
   type: ClusterIP
   selector:

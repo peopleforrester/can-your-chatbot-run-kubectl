@@ -1,9 +1,9 @@
-# Deinopis Architecture — Skill File
+# burritbot Architecture — Skill File
 
-## What Deinopis Is
+## What burritbot Is
 
-Deinopis is the platform name for this build. It is named for the
-ogre-faced spider (genus *Deinopis*) — a nocturnal hunter that does not
+burritbot is the platform name for this build. It is named for the
+ogre-faced spider (genus *burritbot*) — a nocturnal hunter that does not
 spin a passive web. Instead it weaves a small, stretchy cast net between
 its front legs, watches the ground with enormous reflective eyes, and
 throws the net over any prey that walks underneath.
@@ -30,9 +30,9 @@ our cluster?" with an equally cheerful response.
 | **GKE Standard with Node Auto-Provisioning** — *not* Autopilot | Autopilot disables privileged DaemonSets. Falco cannot run on Autopilot. Without Falco there is no runtime detection layer for The Net. |
 | **Workload Identity Federation**, no service-account JSON keys | Every rule in this repo fails explicitly when a JSON key is present. Rotate via GCP, not via Git. |
 | **Vertex AI with `gemini-3-pro`** | 1.5 is unsupported; 2.0 already retired; 2.5 Flash/Pro retire 2026-10-16 (before demo day); 3 Flash is preview. 3 Pro is the only GA model guaranteed to be live during the November 2026 talk. Access via `google-genai` (`vertexai.generative_models` is removed after 2026-06-24). |
-| **`deinopis-net` namespace** (not `guardrails`) | The guarded path runs here. The name is load-bearing — Kyverno policies, NetworkPolicies, and tests all reference it literally. |
-| **`deinopis-*` container naming** | Kyverno enforces that every guardrail sidecar has a name starting with `deinopis-`. This is how operators tell at a glance which containers are part of The Net vs. part of the application. |
-| **`deinopis.io/*` label set** | Every Deployment / Pod / Job in BurritBot namespaces must carry `deinopis.io/layer`, `deinopis.io/model-source`, and `deinopis.io/model-hash`. Kyverno enforces; Grafana dashboards group on these. |
+| **`burritbot-net` namespace** (not `guardrails`) | The guarded path runs here. The name is load-bearing — Kyverno policies, NetworkPolicies, and tests all reference it literally. |
+| **`burritbot-*` container naming** | Kyverno enforces that every guardrail sidecar has a name starting with `burritbot-`. This is how operators tell at a glance which containers are part of The Net vs. part of the application. |
+| **`burritbot.io/*` label set** | Every Deployment / Pod / Job in BurritBot namespaces must carry `burritbot.io/layer`, `burritbot.io/model-source`, and `burritbot.io/model-hash`. Kyverno enforces; Grafana dashboards group on these. |
 | **`cast-net.sh` toggle** | The live demo flips the gateway route from `burritbot-unguarded` to `burritbot-guarded` with a single script. The script is the demo. |
 
 ## Phase Order
@@ -55,7 +55,7 @@ Read the matching skill file **before** generating any config for a
 component:
 
 - `the-eyes-otel-genai.md` — before touching observability/
-- `the-net-kyverno-deinopis.md` — before touching security/kyverno/
+- `the-net-kyverno-burritbot.md` — before touching security/kyverno/
 - `the-net-ai-gateway.md` — before touching ai-gateway/
 - `burritbot-vertex-ai.md` — before touching apps/burritbot/
 - `cast-net-toggle.md` — before touching scripts/cast-net.sh

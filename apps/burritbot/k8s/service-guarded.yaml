@@ -1,5 +1,5 @@
-# ABOUTME: ClusterIP Service for the guarded BurritBot — reached only via the deinopis-net gateway.
-# ABOUTME: The restrict-burritbot-network ClusterPolicy locks egress to deinopis-net + DNS.
+# ABOUTME: ClusterIP Service for the guarded BurritBot — reached only via the burritbot-net gateway.
+# ABOUTME: The restrict-burritbot-network ClusterPolicy locks egress to burritbot-net + DNS.
 ---
 apiVersion: v1
 kind: Service
@@ -8,14 +8,14 @@ metadata:
   namespace: burritbot-guarded
   labels:
     app.kubernetes.io/name: burritbot
-    app.kubernetes.io/part-of: deinopis
-    deinopis.io/layer: application
-    deinopis.io/guarded: "true"
+    app.kubernetes.io/part-of: burritbot
+    burritbot.io/layer: application
+    burritbot.io/guarded: "true"
 spec:
   type: ClusterIP
   selector:
     app.kubernetes.io/name: burritbot
-    deinopis.io/guarded: "true"
+    burritbot.io/guarded: "true"
   ports:
     - name: http
       port: 8080

@@ -1,4 +1,4 @@
-# Project State — Deinopis (Can Your Chatbot Run kubectl?)
+# Project State — burritbot (Can Your Chatbot Run kubectl?)
 
 ## Current Status
 **Phases 1–8 offline build complete. All static tests green.**
@@ -13,7 +13,7 @@ cluster yet.
 - Venue: KubeCon NA 2026, Salt Lake City
 - Speakers: Whitney Lee and Michael Forrester
 - Format: Two-act live demo (unguarded then guarded BurritBot on GKE)
-- Platform name: **Deinopis** (ogre-faced spider — The Eyes + The Net)
+- Platform name: **burritbot** (ogre-faced spider — The Eyes + The Net)
 - Chatbot name: **BurritBot** (Chipotle viral chatbot incident as narrative hook)
 
 ## What's Done
@@ -30,7 +30,7 @@ cluster yet.
 ### Offline Build (Tasks #7 – #18)
 | # | Task | Status | Commit |
 |---|------|--------|--------|
-| 7 | Rebaseline docs to Deinopis spec | completed | 5daad64 |
+| 7 | Rebaseline docs to burritbot spec | completed | 5daad64 |
 | 8 | Python env + test scaffolding | completed | 1608114 |
 | 9 | Project skills and slash commands | completed | c978e63 |
 | 10 | Phase specs + scorecard skeleton | completed | 500bef7 |
@@ -56,7 +56,7 @@ cluster yet.
   is absent — no mocks, no fallbacks.**
 
 ## Phase 1 Preconditions (authoritative)
-1. **GCP project ID:** `deinopis-kubecon-2026` (placeholder — confirm real
+1. **GCP project ID:** `burritbot-kubecon-2026` (placeholder — confirm real
    ID before `terraform apply`).
 2. **Region:** `us-west1`.
 3. **GKE mode:** **Standard with node auto-provisioning.** Not Autopilot —
@@ -104,7 +104,7 @@ passes. **Do not green-wash the scorecard.**
 
 ## Key References
 - `CLAUDE.md` — project Claude Code instructions
-- `docs/BUILD-INSTRUCTIONS.md` — authoritative Deinopis spec
+- `docs/BUILD-INSTRUCTIONS.md` — authoritative burritbot spec
 - `docs/RUNBOOK.md` — demo-day operational runbook
 - `docs/SCORECARD.md` — per-component scorecard
 - `spec/BUILD-SPEC.md` — build-time pointer and completion protocol

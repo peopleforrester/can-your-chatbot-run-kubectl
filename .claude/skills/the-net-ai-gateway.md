@@ -21,7 +21,7 @@ audience -> Envoy AI Gateway -> LLM Guard (input scanners)
          -> back to audience
 ```
 
-All of this runs in the `deinopis-net` namespace. The unguarded path
+All of this runs in the `burritbot-net` namespace. The unguarded path
 skips this namespace entirely and goes straight to Vertex.
 
 ## NeMo Guardrails — Required Rails
@@ -127,12 +127,12 @@ apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: AIGatewayRoute
 metadata:
   name: burritbot-guarded
-  namespace: deinopis-net
+  namespace: burritbot-net
   labels:
-    deinopis.io/layer: the-net
+    burritbot.io/layer: the-net
 spec:
   targetRefs:
-    - name: deinopis-gateway
+    - name: burritbot-gateway
       kind: Gateway
       group: gateway.networking.k8s.io
   schema:
@@ -141,18 +141,18 @@ spec:
     - matches:
         - headers:
             - type: Exact
-              name: x-deinopis-path
+              name: x-burritbot-path
               value: guarded
       backendRefs:
         - name: vertex-ai-backend
           weight: 100
 ```
 
-## The deinopis-net Namespace Rule
+## The burritbot-net Namespace Rule
 
 **Nothing in `ai-gateway/` may use `namespace: guardrails`.** That name
 is from an earlier draft. Phase 5 has a test
-(`test_guarded_path_namespace_is_deinopis_net`) that greps every YAML
+(`test_guarded_path_namespace_is_burritbot_net`) that greps every YAML
 under the gateway directory and fails if it finds the old name.
 
 ## Common Mistakes
@@ -166,4 +166,4 @@ under the gateway directory and fails if it finds the old name.
    for `AIGatewayRoute` or `gateway.networking.k8s.io/v1` for plain
    HTTPRoute. Mixing the two causes a 404 admission error.
 5. **Putting the gateway in `kube-system` or `monitoring`.** It goes in
-   `deinopis-net`, always.
+   `burritbot-net`, always.

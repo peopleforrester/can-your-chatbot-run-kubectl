@@ -3,23 +3,23 @@
 
 output "cluster_name" {
   description = "Name of the deployed GKE cluster."
-  value       = google_container_cluster.deinopis.name
+  value       = google_container_cluster.burritbot.name
 }
 
 output "cluster_endpoint" {
   description = "GKE cluster API endpoint."
-  value       = google_container_cluster.deinopis.endpoint
+  value       = google_container_cluster.burritbot.endpoint
   sensitive   = true
 }
 
 output "cluster_location" {
   description = "Regional location of the GKE cluster."
-  value       = google_container_cluster.deinopis.location
+  value       = google_container_cluster.burritbot.location
 }
 
 output "workload_identity_pool" {
   description = "Workload Identity Federation pool for the cluster."
-  value       = google_container_cluster.deinopis.workload_identity_config[0].workload_pool
+  value       = google_container_cluster.burritbot.workload_identity_config[0].workload_pool
 }
 
 output "workload_service_account_email" {

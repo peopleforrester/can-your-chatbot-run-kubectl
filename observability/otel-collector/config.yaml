@@ -42,16 +42,16 @@ processors:
   resource:
     attributes:
       - key: deployment.environment
-        value: deinopis-demo
+        value: burritbot-demo
         action: insert
       - key: service.namespace
-        value: deinopis-net
+        value: burritbot-net
         action: insert
 
 exporters:
   prometheus:
     endpoint: 0.0.0.0:8889
-    namespace: deinopis
+    namespace: burritbot
     send_timestamps: true
     metric_expiration: 5m
 

@@ -1,7 +1,7 @@
 [project]
-name = "deinopis"
+name = "burritbot"
 version = "0.1.0"
-description = "Deinopis — KubeCon NA 2026 demo platform for 'Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes'"
+description = "burritbot — KubeCon NA 2026 demo platform for 'Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes'"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = []

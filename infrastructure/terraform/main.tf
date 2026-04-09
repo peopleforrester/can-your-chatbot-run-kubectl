@@ -1,4 +1,4 @@
-# ABOUTME: Terraform root module for Deinopis — pins google provider and project.
+# ABOUTME: Terraform root module for burritbot — pins google provider and project.
 # ABOUTME: All GCP resources live under this module; no AWS, no service-account JSON keys.
 
 terraform {

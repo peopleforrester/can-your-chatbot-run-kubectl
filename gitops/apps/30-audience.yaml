@@ -9,14 +9,14 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "2"
   labels:
-    deinopis.io/layer: application
-    app.kubernetes.io/part-of: deinopis
+    burritbot.io/layer: application
+    app.kubernetes.io/part-of: burritbot
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://github.com/REPLACE_WITH_OWNER/deinopis-kubecon-2026.git
+    repoURL: https://github.com/REPLACE_WITH_OWNER/burritbot-kubecon-2026.git
     targetRevision: main
     path: deploy/audience
     directory:

@@ -1,5 +1,5 @@
 # ABOUTME: Phase 4 "The Net — Security" tests — Kyverno policies and Falco rules.
-# ABOUTME: Validates deinopis.io labels, deinopis-* sidecar naming, and Falco tags.
+# ABOUTME: Validates burritbot.io labels, burritbot-* sidecar naming, and Falco tags.
 
 from __future__ import annotations
 
@@ -19,18 +19,18 @@ KYVERNO_TESTS_DIR = SECURITY_DIR / "kyverno" / "tests"
 FALCO_DIR = SECURITY_DIR / "falco" / "rules"
 
 REQUIRED_KYVERNO_POLICIES = {
-    "require-deinopis-labels.yaml",
-    "require-deinopis-sidecar-naming.yaml",
+    "require-burritbot-labels.yaml",
+    "require-burritbot-sidecar-naming.yaml",
     "restrict-burritbot-network.yaml",
 }
 
-REQUIRED_DEINOPIS_LABELS = {
-    "deinopis.io/layer",
-    "deinopis.io/model-source",
-    "deinopis.io/model-hash",
+REQUIRED_BURRITBOT_LABELS = {
+    "burritbot.io/layer",
+    "burritbot.io/model-source",
+    "burritbot.io/model-hash",
 }
 
-REQUIRED_FALCO_TAGS = {"deinopis", "the-net"}
+REQUIRED_FALCO_TAGS = {"burritbot", "the-net"}
 
 
 @pytest.mark.static
@@ -64,46 +64,46 @@ def test_kyverno_policies_are_valid_yaml_and_kind() -> None:
 
 
 @pytest.mark.static
-def test_require_labels_policy_enforces_deinopis_labels() -> None:
-    """require-deinopis-labels.yaml enforces the full deinopis.io label set."""
-    path = KYVERNO_DIR / "require-deinopis-labels.yaml"
-    assert path.exists(), "require-deinopis-labels.yaml is missing"
+def test_require_labels_policy_enforces_burritbot_labels() -> None:
+    """require-burritbot-labels.yaml enforces the full burritbot.io label set."""
+    path = KYVERNO_DIR / "require-burritbot-labels.yaml"
+    assert path.exists(), "require-burritbot-labels.yaml is missing"
     text = path.read_text(encoding="utf-8")
-    missing = [lbl for lbl in REQUIRED_DEINOPIS_LABELS if lbl not in text]
+    missing = [lbl for lbl in REQUIRED_BURRITBOT_LABELS if lbl not in text]
     assert not missing, f"Kyverno require-labels policy missing labels: {missing}"
 
 
 @pytest.mark.static
-def test_sidecar_naming_policy_requires_deinopis_prefix() -> None:
-    """require-deinopis-sidecar-naming.yaml enforces the deinopis-* sidecar prefix."""
-    path = KYVERNO_DIR / "require-deinopis-sidecar-naming.yaml"
-    assert path.exists(), "require-deinopis-sidecar-naming.yaml is missing"
+def test_sidecar_naming_policy_requires_burritbot_prefix() -> None:
+    """require-burritbot-sidecar-naming.yaml enforces the burritbot-* sidecar prefix."""
+    path = KYVERNO_DIR / "require-burritbot-sidecar-naming.yaml"
+    assert path.exists(), "require-burritbot-sidecar-naming.yaml is missing"
     text = path.read_text(encoding="utf-8")
-    assert "deinopis-" in text, (
-        "sidecar naming policy does not reference the `deinopis-` prefix"
+    assert "burritbot-" in text, (
+        "sidecar naming policy does not reference the `burritbot-` prefix"
     )
 
 
 @pytest.mark.static
-def test_network_policy_locks_guarded_burritbot_to_deinopis_net() -> None:
-    """restrict-burritbot-network.yaml references the deinopis-net namespace."""
+def test_network_policy_locks_guarded_burritbot_to_burritbot_net() -> None:
+    """restrict-burritbot-network.yaml references the burritbot-net namespace."""
     path = KYVERNO_DIR / "restrict-burritbot-network.yaml"
     assert path.exists(), "restrict-burritbot-network.yaml is missing"
     text = path.read_text(encoding="utf-8")
-    assert "deinopis-net" in text, "network policy does not reference deinopis-net"
+    assert "burritbot-net" in text, "network policy does not reference burritbot-net"
 
 
 @pytest.mark.static
-def test_falco_rules_tagged_deinopis_the_net() -> None:
-    """At least one Falco rule file tags rules with [deinopis, the-net, ...]."""
+def test_falco_rules_tagged_burritbot_the_net() -> None:
+    """At least one Falco rule file tags rules with [burritbot, the-net, ...]."""
     any_tagged = False
     for path in FALCO_DIR.glob("*.yaml"):
         text = path.read_text(encoding="utf-8")
-        if "deinopis" in text and "the-net" in text:
+        if "burritbot" in text and "the-net" in text:
             any_tagged = True
             break
     assert any_tagged, (
-        f"No Falco rule file in {FALCO_DIR} tagged [deinopis, the-net, ...]"
+        f"No Falco rule file in {FALCO_DIR} tagged [burritbot, the-net, ...]"
     )
 
 

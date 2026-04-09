@@ -1,4 +1,4 @@
-# Claude Code Build Instructions: Deinopis — KubeCon NA 2026 Demo Platform
+# Claude Code Build Instructions: burritbot — KubeCon NA 2026 Demo Platform
 
 > **Preserved verbatim as received**, with two small deviations tracked here:
 >
@@ -25,13 +25,13 @@
 
 ---
 
-# Claude Code Build Instructions: Deinopis — KubeCon NA 2026 Demo Platform
+# Claude Code Build Instructions: burritbot — KubeCon NA 2026 Demo Platform
 
 ## Context for Claude Code
 
-You are building the demo infrastructure for a KubeCon NA 2026 talk called "Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes" co-presented by Michael Forrester and Whitney Lee. The project is named **Deinopis** after the ogre-faced spider, whose hunting strategy maps to the architecture: enormous eyes (OTel observability) to see everything coming, and a net actively cast over prey (the enforcement stack catching bad prompts). Whitney Lee's spinybacked-orbweaver handles auto-instrumentation (the eyes). The Deinopis stack handles enforcement (the net).
+You are building the demo infrastructure for a KubeCon NA 2026 talk called "Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes" co-presented by Michael Forrester and Whitney Lee. The project is named **burritbot** after the ogre-faced spider, whose hunting strategy maps to the architecture: enormous eyes (OTel observability) to see everything coming, and a net actively cast over prey (the enforcement stack catching bad prompts). Whitney Lee's spinybacked-orbweaver handles auto-instrumentation (the eyes). The burritbot stack handles enforcement (the net).
 
-The demo has two acts: Act 1 deploys an unguarded chatbot and lets the audience break it. Act 2 layers on the Deinopis guardrails stack and shows the same attacks being blocked, logged, and traced.
+The demo has two acts: Act 1 deploys an unguarded chatbot and lets the audience break it. Act 2 layers on the burritbot guardrails stack and shows the same attacks being blocked, logged, and traced.
 
 This repo is forked from the kubeauto-idp codebase (EKS-based). Your job is to convert it to GKE and add the AI guardrails stack. Reuse everything that makes sense (ArgoCD app-of-apps, Kyverno, Falco, OTel, Grafana). Replace everything AWS-specific with GCP equivalents.
 
@@ -40,18 +40,18 @@ This repo is forked from the kubeauto-idp codebase (EKS-based). Your job is to c
 ## CLAUDE.md (drop this into the repo root)
 
 ```markdown
-# Deinopis — KubeCon NA 2026 Demo Platform
+# burritbot — KubeCon NA 2026 Demo Platform
 # "Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes"
 
 ## What This Is
 A GKE cluster running a complete AI guardrails demo for a KubeCon talk.
-Two modes: UNGUARDED (chatbot with no protections) and GUARDED (full Deinopis stack active).
+Two modes: UNGUARDED (chatbot with no protections) and GUARDED (full burritbot stack active).
 The audience interacts with both via a web frontend and watches the difference on Grafana in real-time.
 
 Architecture metaphor: the ogre-faced spider.
 - The Eyes = OpenTelemetry GenAI conventions + spinybacked-orbweaver (auto-instrumentation)
 - The Net = NeMo Guardrails + LLM Guard + Kyverno + Falco (enforcement)
-- Two spiders: spinybacked-orbweaver instruments. Deinopis enforces.
+- Two spiders: spinybacked-orbweaver instruments. burritbot enforces.
 
 ## Repository Origin
 Forked from kubeauto-idp (EKS). All AWS references converted to GCP equivalents.
@@ -73,7 +73,7 @@ GenAI OTel conventions, spinybacked-orbweaver) are new.
 - Vertex AI as the inference backend (not self-hosted model) for demo reliability
 - ArgoCD app-of-apps with sync waves for deployment ordering
 - Two namespaces for the chatbot: burritbot-unguarded and burritbot-guarded
-- Guardrails stack in the deinopis-net namespace
+- Guardrails stack in the burritbot-net namespace
 - Single Grafana instance with split dashboards showing both versions side-by-side
 
 ## Phase Order
@@ -119,7 +119,7 @@ Phase 8: Hardening + Backup Videos
 ## Repository Structure
 
 ```
-deinopis/
+burritbot/
 ├── CLAUDE.md
 ├── .claude/
 │   ├── commands/
@@ -165,7 +165,7 @@ deinopis/
 │   │   ├── argocd-cm.yaml
 │   │   └── applicationsets/
 │   ├── namespaces/
-│   │   └── namespaces.yaml           # burritbot-unguarded, burritbot-guarded, deinopis-net
+│   │   └── namespaces.yaml           # burritbot-unguarded, burritbot-guarded, burritbot-net
 │   └── apps/
 │       ├── kyverno/
 │       ├── falco/
@@ -198,7 +198,7 @@ deinopis/
 │   └── network-policies/
 │       ├── default-deny.yaml
 │       ├── burritbot-unguarded.yaml   # Wide open (intentional for demo)
-│       └── burritbot-guarded.yaml     # Restricted to deinopis-net only
+│       └── burritbot-guarded.yaml     # Restricted to burritbot-net only
 ├── security/
 │   ├── falco/
 │   │   ├── custom-rules.yaml
@@ -264,7 +264,7 @@ deinopis/
 │   ├── backup-videos/
 │   │   └── README.md
 │   ├── attack-prompts.txt
-│   └── cast-net.sh                    # Enable/disable the Deinopis guardrails stack live
+│   └── cast-net.sh                    # Enable/disable the burritbot guardrails stack live
 └── docs/
     ├── SETUP.md
     ├── ARCHITECTURE.md
@@ -300,9 +300,9 @@ google_secret_manager_secret         # For API keys
 
 **Variables:**
 ```
-project_id          = "deinopis-kubecon-2026"
+project_id          = "burritbot-kubecon-2026"
 region              = "us-west1"
-cluster_name        = "deinopis"
+cluster_name        = "burritbot"
 ```
 
 **Test criteria:**
@@ -311,7 +311,7 @@ cluster_name        = "deinopis"
 - terraform plan produces no errors
 - GKE cluster endpoint is reachable
 - kubectl get nodes returns Ready nodes
-- Namespaces exist: argocd, monitoring, security, burritbot-unguarded, burritbot-guarded, deinopis-net, audience
+- Namespaces exist: argocd, monitoring, security, burritbot-unguarded, burritbot-guarded, burritbot-net, audience
 - Workload Identity is enabled
 - Node auto-provisioning is enabled
 - No default service account has any IAM roles
@@ -329,7 +329,7 @@ cluster_name        = "deinopis"
 
 **Sync wave order:**
 ```
-Wave -10: Namespaces (including deinopis-net)
+Wave -10: Namespaces (including burritbot-net)
 Wave -5:  Kyverno CRDs, cert-manager, external-secrets CRDs
 Wave -4:  Kyverno policies (audit mode), RBAC, network policies
 Wave -3:  External Secrets, cert-manager issuers
@@ -387,7 +387,7 @@ exporters:
 
 **Grafana dashboards (named for the metaphor):**
 1. **The Eyes Overview** (`the-eyes-overview.json`): Total prompts, blocked prompts, block rate, top blocked categories, response latency with/without the net
-2. **Prompt/Response Traces** (`prompt-response-traces.json`): Live trace view showing prompts flowing through the Deinopis pipeline (NeMo decision, LLM Guard scan, final response)
+2. **Prompt/Response Traces** (`prompt-response-traces.json`): Live trace view showing prompts flowing through the burritbot pipeline (NeMo decision, LLM Guard scan, final response)
 3. **Cast Net Comparison** (`cast-net-comparison.json`): Split panel showing burritbot-unguarded vs burritbot-guarded in real-time. This is the money dashboard for the live demo.
 
 **spinybacked-orbweaver auto-instrumentation:**
@@ -418,7 +418,7 @@ Not a core demo segment, but a natural touchpoint: "We didn't hand-instrument th
 
 **Goal:** Kyverno policies governing AI workload deployments, Falco detecting AI-specific runtime anomalies.
 
-**Kyverno policies (deployed to deinopis-net governance):**
+**Kyverno policies (deployed to burritbot-net governance):**
 
 ```yaml
 # require-model-provenance.yaml
@@ -427,7 +427,7 @@ kind: ClusterPolicy
 metadata:
   name: require-model-provenance
   labels:
-    deinopis.io/layer: the-net
+    burritbot.io/layer: the-net
 spec:
   validationFailureAction: Audit
   rules:
@@ -444,8 +444,8 @@ spec:
         pattern:
           metadata:
             annotations:
-              deinopis.io/model-source: "?*"
-              deinopis.io/model-hash: "?*"
+              burritbot.io/model-source: "?*"
+              burritbot.io/model-hash: "?*"
 ```
 
 ```yaml
@@ -455,7 +455,7 @@ kind: ClusterPolicy
 metadata:
   name: require-guardrails-sidecar
   labels:
-    deinopis.io/layer: the-net
+    burritbot.io/layer: the-net
 spec:
   validationFailureAction: Audit
   rules:
@@ -470,7 +470,7 @@ spec:
         pattern:
           spec:
             containers:
-              - name: "deinopis-*"
+              - name: "burritbot-*"
 ```
 
 **Falco AI-specific rules:**
@@ -482,12 +482,12 @@ spec:
   condition: >
     spawned_process and container and
     (proc.name in (bash, sh, zsh, csh, dash)) and
-    (k8s.ns.name in (burritbot-unguarded, burritbot-guarded, deinopis-net))
+    (k8s.ns.name in (burritbot-unguarded, burritbot-guarded, burritbot-net))
   output: >
     Shell spawned in AI workload (user=%user.name command=%proc.cmdline
     ns=%k8s.ns.name pod=%k8s.pod.name container=%container.name)
   priority: WARNING
-  tags: [deinopis, the-net, shell, runtime-security]
+  tags: [burritbot, the-net, shell, runtime-security]
 
 - rule: Unexpected Outbound Connection from Inference Pod
   desc: Inference pods connecting to unexpected external endpoints
@@ -499,7 +499,7 @@ spec:
     Unexpected outbound from inference pod (command=%proc.cmdline
     connection=%fd.name ns=%k8s.ns.name pod=%k8s.pod.name)
   priority: NOTICE
-  tags: [deinopis, the-net, network, data-exfiltration]
+  tags: [burritbot, the-net, network, data-exfiltration]
 
 - rule: Large Response Body from LLM
   desc: Unusually large response suggesting data dump or prompt leak
@@ -510,7 +510,7 @@ spec:
     Large outbound payload from guarded inference pod
     (size=%evt.res ns=%k8s.ns.name pod=%k8s.pod.name)
   priority: WARNING
-  tags: [deinopis, the-net, data-exfiltration, anomaly]
+  tags: [burritbot, the-net, data-exfiltration, anomaly]
 ```
 
 **Test criteria:**
@@ -518,7 +518,7 @@ spec:
 - Kyverno controller pods Running
 - All policies show status Ready
 - Test pod without model provenance annotations flagged in Audit
-- Test pod in guarded namespace without deinopis-* sidecar flagged
+- Test pod in guarded namespace without burritbot-* sidecar flagged
 - Falco pods Running on all nodes
 - Falco detects shell exec inside test inference container
 - Falcosidekick forwards alerts to Grafana
@@ -528,7 +528,7 @@ spec:
 
 ### Phase 5: The Net — AI Gateway Layer (Budget: 120 min)
 
-**Goal:** Inference traffic flows through Envoy AI Gateway with NeMo Guardrails and LLM Guard processing prompts and responses in the deinopis-net namespace.
+**Goal:** Inference traffic flows through Envoy AI Gateway with NeMo Guardrails and LLM Guard processing prompts and responses in the burritbot-net namespace.
 
 **Architecture (guarded path):**
 ```
@@ -606,20 +606,20 @@ output_scanners:
 
 **Test criteria:**
 ```
-- All gateway/guardrails pods Running in deinopis-net namespace
+- All gateway/guardrails pods Running in burritbot-net namespace
 - Food ordering prompt passes through and returns valid response
 - Off-topic prompt ("solve this Python problem") blocked by NeMo Guardrails
 - Prompt injection attempt detected by LLM Guard
 - Response containing code caught by LLM Guard output scanner
 - All decisions appear as OTel traces in Grafana (The Eyes see the net firing)
-- Latency overhead of full Deinopis stack < 500ms per request
+- Latency overhead of full burritbot stack < 500ms per request
 ```
 
 ---
 
 ### Phase 6: BurritBot Application (Budget: 90 min)
 
-**Goal:** Two identical chatbot deployments. One in burritbot-unguarded (direct to Vertex AI). One in burritbot-guarded (through the Deinopis net).
+**Goal:** Two identical chatbot deployments. One in burritbot-unguarded (direct to Vertex AI). One in burritbot-guarded (through the burritbot net).
 
 **BurritBot app (app.py, ~60 lines):**
 ```python
@@ -672,7 +672,7 @@ Be enthusiastic and helpful. Always confirm the full order before finishing.
 
 **Deployment difference:**
 - `burritbot-unguarded/`: Deployment + Service, no sidecar, no network policy restrictions. Naked. No net.
-- `burritbot-guarded/`: Deployment + Service + deinopis-guardrails sidecar, Kyverno-compliant labels, OTel annotations, network policy restricting egress to deinopis-net only. Fully wrapped in the net.
+- `burritbot-guarded/`: Deployment + Service + burritbot-guardrails sidecar, Kyverno-compliant labels, OTel annotations, network policy restricting egress to burritbot-net only. Fully wrapped in the net.
 
 **Test criteria:**
 ```
@@ -719,7 +719,7 @@ Be enthusiastic and helpful. Always confirm the full order before finishing.
 - Run full demo sequence 3 times end-to-end
 - Record each segment as backup video
 - Create demo/RUNBOOK.md with timing and talking points
-- Create demo/cast-net.sh that enables/disables the Deinopis stack live (< 10 seconds)
+- Create demo/cast-net.sh that enables/disables the burritbot stack live (< 10 seconds)
 - Test network failure scenarios
 - Test Grafana with simulated audience load (50+ concurrent)
 - Document costs in docs/COST.md
@@ -818,13 +818,13 @@ claude -p "Read CLAUDE.md. Execute Phase 8: Hardening. Full demo 3x, record back
 - `.claude/commands/build-phase.md` (change EKS → GKE)
 - `.claude/commands/validate-phase.md`
 - `.claude/skills/argocd-patterns.md`
-- `.claude/skills/kyverno-policies.md` (extend with AI policies, add deinopis.io labels)
-- `.claude/skills/falco-rules.md` (extend with AI rules, add deinopis tags)
+- `.claude/skills/kyverno-policies.md` (extend with AI policies, add burritbot.io labels)
+- `.claude/skills/falco-rules.md` (extend with AI rules, add burritbot tags)
 - `.claude/skills/otel-wiring.md` (extend with GenAI conventions)
 - `gitops/argocd/` (reuse install, change ingress)
-- `gitops/bootstrap/app-of-apps.yaml` (update app list, add deinopis-net namespace)
+- `gitops/bootstrap/app-of-apps.yaml` (update app list, add burritbot-net namespace)
 - `policies/kyverno/disallow-privileged.yaml`
-- `policies/kyverno/require-labels.yaml` (add deinopis.io labels)
+- `policies/kyverno/require-labels.yaml` (add burritbot.io labels)
 - `policies/kyverno/require-resource-limits.yaml`
 - `security/falco/custom-rules.yaml` (add AI rules)
 - `tests/` structure (rewrite assertions for GKE)

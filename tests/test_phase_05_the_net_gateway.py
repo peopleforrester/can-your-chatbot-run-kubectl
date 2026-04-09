@@ -86,15 +86,15 @@ def test_envoy_ai_gateway_manifest_exists() -> None:
 
 
 @pytest.mark.static
-def test_guarded_path_namespace_is_deinopis_net() -> None:
-    """Every AI gateway manifest targets the deinopis-net namespace, not `guardrails`."""
+def test_guarded_path_namespace_is_burritbot_net() -> None:
+    """Every AI gateway manifest targets the burritbot-net namespace, not `guardrails`."""
     offenders = []
     for path in GATEWAY_DIR.rglob("*.yaml"):
         text = path.read_text(encoding="utf-8")
         if "namespace: guardrails" in text:
             offenders.append(path.name)
     assert not offenders, (
-        f"Found legacy `guardrails` namespace in: {offenders} — must be `deinopis-net`"
+        f"Found legacy `guardrails` namespace in: {offenders} — must be `burritbot-net`"
     )
 
 
@@ -104,18 +104,18 @@ def test_guarded_path_namespace_is_deinopis_net() -> None:
 @pytest.mark.live
 def test_nemo_guardrails_pod_running(k8s_core_v1) -> None:
     pods = k8s_core_v1.list_namespaced_pod(
-        namespace="deinopis-net",
+        namespace="burritbot-net",
         label_selector="app.kubernetes.io/name=nemo-guardrails",
     )
     running = [p for p in pods.items if p.status and p.status.phase == "Running"]
-    assert running, "No NeMo Guardrails pods Running in deinopis-net"
+    assert running, "No NeMo Guardrails pods Running in burritbot-net"
 
 
 @pytest.mark.live
 def test_envoy_ai_gateway_pod_running(k8s_core_v1) -> None:
     pods = k8s_core_v1.list_namespaced_pod(
-        namespace="deinopis-net",
+        namespace="burritbot-net",
         label_selector="app.kubernetes.io/name=envoy-ai-gateway",
     )
     running = [p for p in pods.items if p.status and p.status.phase == "Running"]
-    assert running, "No Envoy AI Gateway pods Running in deinopis-net"
+    assert running, "No Envoy AI Gateway pods Running in burritbot-net"

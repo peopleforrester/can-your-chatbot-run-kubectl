@@ -1,5 +1,5 @@
 # ABOUTME: Kyverno ClusterPolicy that generates a NetworkPolicy locking guarded BurritBot egress.
-# ABOUTME: Guarded BurritBot can only reach deinopis-net (the gateway) and kube-system DNS.
+# ABOUTME: Guarded BurritBot can only reach burritbot-net (the gateway) and kube-system DNS.
 ---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -7,12 +7,12 @@ metadata:
   name: restrict-burritbot-network
   annotations:
     policies.kyverno.io/title: Restrict Guarded BurritBot Egress
-    policies.kyverno.io/category: Deinopis / The Net
+    policies.kyverno.io/category: burritbot / The Net
     policies.kyverno.io/severity: high
     policies.kyverno.io/subject: NetworkPolicy
     policies.kyverno.io/description: >-
       Generates a NetworkPolicy in the burritbot-guarded namespace that
-      restricts egress to deinopis-net (the AI gateway) and kube-system DNS
+      restricts egress to burritbot-net (the AI gateway) and kube-system DNS
       only. If someone deletes the NetworkPolicy by hand, Kyverno re-creates
       it on the next reconcile — guarded BurritBot cannot escape the net.
 spec:
@@ -29,14 +29,14 @@ spec:
       generate:
         apiVersion: networking.k8s.io/v1
         kind: NetworkPolicy
-        name: burritbot-guarded-egress-to-deinopis-net
+        name: burritbot-guarded-egress-to-burritbot-net
         namespace: burritbot-guarded
         synchronize: true
         data:
           metadata:
             labels:
-              deinopis.io/layer: the-net
-              app.kubernetes.io/part-of: deinopis
+              burritbot.io/layer: the-net
+              app.kubernetes.io/part-of: burritbot
           spec:
             podSelector:
               matchLabels:
@@ -47,7 +47,7 @@ spec:
               - to:
                   - namespaceSelector:
                       matchLabels:
-                        kubernetes.io/metadata.name: deinopis-net
+                        kubernetes.io/metadata.name: burritbot-net
                 ports:
                   - protocol: TCP
                     port: 8080

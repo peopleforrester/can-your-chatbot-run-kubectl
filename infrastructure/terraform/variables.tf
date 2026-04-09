@@ -1,8 +1,8 @@
-# ABOUTME: Terraform input variables for Deinopis GCP foundation.
+# ABOUTME: Terraform input variables for burritbot GCP foundation.
 # ABOUTME: All defaults are Phase 1 placeholders — override in terraform.tfvars.
 
 variable "project_id" {
-  description = "GCP project ID hosting the Deinopis demo cluster."
+  description = "GCP project ID hosting the burritbot demo cluster."
   type        = string
 }
 
@@ -15,19 +15,19 @@ variable "region" {
 variable "cluster_name" {
   description = "Name of the GKE Standard cluster."
   type        = string
-  default     = "deinopis"
+  default     = "burritbot"
 }
 
 variable "network_name" {
   description = "Name of the VPC network."
   type        = string
-  default     = "deinopis-vpc"
+  default     = "burritbot-vpc"
 }
 
 variable "subnet_name" {
   description = "Name of the regional subnetwork."
   type        = string
-  default     = "deinopis-subnet"
+  default     = "burritbot-subnet"
 }
 
 variable "subnet_cidr" {
@@ -51,17 +51,17 @@ variable "services_cidr" {
 variable "node_service_account_id" {
   description = "Account ID of the GKE node service account (no JSON keys)."
   type        = string
-  default     = "deinopis-gke-nodes"
+  default     = "burritbot-gke-nodes"
 }
 
 variable "workload_service_account_id" {
   description = "Account ID of the WIF-bound workload service account."
   type        = string
-  default     = "deinopis-workload"
+  default     = "burritbot-workload"
 }
 
 variable "vertex_secret_id" {
   description = "Secret Manager secret ID holding any Vertex AI quota metadata."
   type        = string
-  default     = "deinopis-vertex-ai"
+  default     = "burritbot-vertex-ai"
 }

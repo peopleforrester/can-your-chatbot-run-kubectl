@@ -1,5 +1,5 @@
 # ABOUTME: NeMo Guardrails config wiring Colang 2.0 rails to Vertex AI gemini-3-pro.
-# ABOUTME: Loaded by the nemo-guardrails sidecar in deinopis-net.
+# ABOUTME: Loaded by the nemo-guardrails sidecar in burritbot-net.
 ---
 models:
   - type: main

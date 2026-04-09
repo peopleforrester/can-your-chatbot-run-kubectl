@@ -1,15 +1,15 @@
 # ABOUTME: Envoy AI Gateway 0.2+ manifest — Gateway, HTTPRoute, and AIGatewayRoute.
-# ABOUTME: Lives in deinopis-net and is the single choke point for guarded BurritBot traffic.
+# ABOUTME: Lives in burritbot-net and is the single choke point for guarded BurritBot traffic.
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: deinopis-ai-gateway
-  namespace: deinopis-net
+  name: burritbot-ai-gateway
+  namespace: burritbot-net
   labels:
-    deinopis.io/layer: the-net
+    burritbot.io/layer: the-net
     app.kubernetes.io/name: envoy-ai-gateway
-    app.kubernetes.io/part-of: deinopis
+    app.kubernetes.io/part-of: burritbot
 spec:
   gatewayClassName: envoy-ai-gateway
   listeners:
@@ -21,21 +21,21 @@ spec:
           from: Selector
           selector:
             matchLabels:
-              deinopis.io/layer: application
+              burritbot.io/layer: application
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: burritbot-audience
-  namespace: deinopis-net
+  namespace: burritbot-net
   labels:
-    deinopis.io/layer: the-net
-    app.kubernetes.io/part-of: deinopis
+    burritbot.io/layer: the-net
+    app.kubernetes.io/part-of: burritbot
 spec:
   parentRefs:
-    - name: deinopis-ai-gateway
+    - name: burritbot-ai-gateway
   hostnames:
-    - burritbot.deinopis.local
+    - burritbot.burritbot.local
   rules:
     - matches:
         - path:
@@ -51,10 +51,10 @@ apiVersion: aigateway.envoyproxy.io/v1alpha1
 kind: AIGatewayRoute
 metadata:
   name: burritbot-gemini-route
-  namespace: deinopis-net
+  namespace: burritbot-net
   labels:
-    deinopis.io/layer: the-net
-    app.kubernetes.io/part-of: deinopis
+    burritbot.io/layer: the-net
+    app.kubernetes.io/part-of: burritbot
 spec:
   schema:
     name: OpenAI

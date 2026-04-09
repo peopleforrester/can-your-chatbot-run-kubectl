@@ -5,7 +5,7 @@
 `scripts/cast-net.sh` is the single command that flips BurritBot's
 audience traffic between the **unguarded** path (straight to Vertex AI,
 no rails, no scanners) and the **guarded** path (through Envoy AI
-Gateway + NeMo + LLM Guard in `deinopis-net`).
+Gateway + NeMo + LLM Guard in `burritbot-net`).
 
 This script *is* the demo. Act 1 ends with "cast the net" and Act 2
 runs the same attack prompts against the same chatbot image with the
@@ -30,7 +30,7 @@ cleanly from a single terminal window on stage.
 
 set -euo pipefail
 
-GATEWAY_NAMESPACE="deinopis-net"
+GATEWAY_NAMESPACE="burritbot-net"
 ROUTE_NAME="burritbot-audience"
 UNGUARDED_TARGET="burritbot-unguarded"
 GUARDED_TARGET="burritbot-guarded"
@@ -40,7 +40,7 @@ usage() {
 Usage: $0 [cast|recall|status]
 
   cast    Route audience traffic through the guarded path
-          (deinopis-net / NeMo Guardrails / LLM Guard / Envoy)
+          (burritbot-net / NeMo Guardrails / LLM Guard / Envoy)
   recall  Route audience traffic directly to burritbot-unguarded
   status  Show the current route target
 EOF
@@ -73,7 +73,7 @@ main() {
     cast|on)
       echo "Casting the net — routing to $GUARDED_TARGET..."
       patch_target "$GUARDED_TARGET"
-      echo "Net cast. Audience traffic now runs through deinopis-net."
+      echo "Net cast. Audience traffic now runs through burritbot-net."
       ;;
     recall|off)
       echo "Recalling the net — routing to $UNGUARDED_TARGET..."
@@ -95,7 +95,7 @@ main "$@"
 ## Preconditions
 
 - An HTTPRoute (or Envoy AIGatewayRoute) named `burritbot-audience`
-  lives in the `deinopis-net` namespace.
+  lives in the `burritbot-net` namespace.
 - `burritbot-unguarded` and `burritbot-guarded` are the two Services
   the audience frontend proxies to.
 - The script is committed executable (`chmod +x`) — Phase 7 tests check

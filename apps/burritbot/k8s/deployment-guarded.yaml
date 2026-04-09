@@ -1,5 +1,5 @@
-# ABOUTME: Guarded BurritBot Deployment — traffic enters via the deinopis-net gateway.
-# ABOUTME: Carries the full deinopis.io label set enforced by require-deinopis-labels.
+# ABOUTME: Guarded BurritBot Deployment — traffic enters via the burritbot-net gateway.
+# ABOUTME: Carries the full burritbot.io label set enforced by require-burritbot-labels.
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -8,26 +8,26 @@ metadata:
   namespace: burritbot-guarded
   labels:
     app.kubernetes.io/name: burritbot
-    app.kubernetes.io/part-of: deinopis
-    deinopis.io/layer: application
-    deinopis.io/guarded: "true"
-    deinopis.io/model-source: "vertex-ai/gemini-3-pro"
-    deinopis.io/model-hash: "sha256:deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
+    app.kubernetes.io/part-of: burritbot
+    burritbot.io/layer: application
+    burritbot.io/guarded: "true"
+    burritbot.io/model-source: "vertex-ai/gemini-3-pro"
+    burritbot.io/model-hash: "sha256:deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
 spec:
   replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: burritbot
-      deinopis.io/guarded: "true"
+      burritbot.io/guarded: "true"
   template:
     metadata:
       labels:
         app.kubernetes.io/name: burritbot
-        app.kubernetes.io/part-of: deinopis
-        deinopis.io/layer: application
-        deinopis.io/guarded: "true"
-        deinopis.io/model-source: "vertex-ai/gemini-3-pro"
-        deinopis.io/model-hash: "sha256:deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
+        app.kubernetes.io/part-of: burritbot
+        burritbot.io/layer: application
+        burritbot.io/guarded: "true"
+        burritbot.io/model-source: "vertex-ai/gemini-3-pro"
+        burritbot.io/model-hash: "sha256:deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
     spec:
       serviceAccountName: burritbot
       automountServiceAccountToken: true
@@ -39,7 +39,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: burritbot
-          image: us-west1-docker.pkg.dev/REPLACE_WITH_PROJECT/deinopis/burritbot:0.1.0
+          image: us-west1-docker.pkg.dev/REPLACE_WITH_PROJECT/burritbot/burritbot:0.1.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

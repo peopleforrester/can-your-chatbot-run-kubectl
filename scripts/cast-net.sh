@@ -15,7 +15,7 @@ usage() {
   cat <<EOF
 Usage: ${SCRIPT_NAME} <cast|recall|status>
 
-  cast     Route audience traffic through the deinopis-net guarded path (${GUARDED}).
+  cast     Route audience traffic through the burritbot-net guarded path (${GUARDED}).
   recall   Route audience traffic directly to the unguarded BurritBot (${UNGUARDED}).
   status   Print the current BURRITBOT_TARGET without changing anything.
 

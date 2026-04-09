@@ -28,7 +28,7 @@ BURRITBOT_UNGUARDED_URL: str = os.environ.get(
 )
 BURRITBOT_GUARDED_URL: str = os.environ.get(
     "BURRITBOT_GUARDED_URL",
-    "http://deinopis-ai-gateway.deinopis-net.svc.cluster.local:8080",
+    "http://burritbot-ai-gateway.burritbot-net.svc.cluster.local:8080",
 )
 
 RATE_LIMIT = "10/minute"
@@ -58,7 +58,7 @@ limiter = Limiter(key_func=get_remote_address, default_limits=[RATE_LIMIT])
 def create_app() -> FastAPI:
     """Factory for the audience frontend backend."""
     app = FastAPI(
-        title="Deinopis Audience Frontend",
+        title="burritbot Audience Frontend",
         description="Lightweight front-end that proxies audience prompts to BurritBot.",
         version="0.1.0",
     )

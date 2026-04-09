@@ -2,7 +2,7 @@
 # ABOUTME: Applied with `helm upgrade --install argocd argo/argo-cd -n argocd -f values.yaml`.
 ---
 global:
-  domain: argocd.deinopis.local
+  domain: argocd.burritbot.local
 
 crds:
   install: true

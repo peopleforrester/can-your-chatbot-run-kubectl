@@ -1,4 +1,4 @@
-# ABOUTME: Secret Manager for Deinopis — placeholder secret shell for Vertex AI quota.
+# ABOUTME: Secret Manager for burritbot — placeholder secret shell for Vertex AI quota.
 # ABOUTME: Actual values are written out-of-band; Terraform only creates the container.
 
 resource "google_secret_manager_secret" "vertex_ai" {
@@ -9,8 +9,8 @@ resource "google_secret_manager_secret" "vertex_ai" {
   }
 
   labels = {
-    "deinopis-io_layer" = "foundation"
-    "deinopis-io_owner" = "burritbot"
+    "burritbot-io_layer" = "foundation"
+    "burritbot-io_owner" = "burritbot"
   }
 }
 

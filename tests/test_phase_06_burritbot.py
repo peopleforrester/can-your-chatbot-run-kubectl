@@ -97,8 +97,8 @@ def test_burritbot_unguarded_deployment_valid() -> None:
 
 
 @pytest.mark.static
-def test_burritbot_guarded_deployment_has_deinopis_labels() -> None:
-    """The guarded Deployment carries the full deinopis.io label set."""
+def test_burritbot_guarded_deployment_has_burritbot_labels() -> None:
+    """The guarded Deployment carries the full burritbot.io label set."""
     path = APP_MANIFESTS_DIR / "deployment-guarded.yaml"
     doc = yaml.safe_load(path.read_text(encoding="utf-8"))
     assert doc["kind"] == "Deployment", "deployment-guarded.yaml is not a Deployment"
@@ -107,12 +107,12 @@ def test_burritbot_guarded_deployment_has_deinopis_labels() -> None:
     )
     labels = doc["metadata"].get("labels", {}) or {}
     required = {
-        "deinopis.io/layer",
-        "deinopis.io/model-source",
-        "deinopis.io/model-hash",
+        "burritbot.io/layer",
+        "burritbot.io/model-source",
+        "burritbot.io/model-hash",
     }
     missing = required - set(labels)
-    assert not missing, f"guarded deployment missing deinopis.io labels: {sorted(missing)}"
+    assert not missing, f"guarded deployment missing burritbot.io labels: {sorted(missing)}"
 
 
 @pytest.mark.static

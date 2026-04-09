@@ -1,8 +1,8 @@
 {
   "title": "BurritBot Prompt / Response Traces",
-  "uid": "deinopis-prompt-response-traces",
+  "uid": "burritbot-prompt-response-traces",
   "description": "Trace table joining audience prompts to BurritBot responses with gen_ai.* attributes, latency, and guardrail verdicts.",
-  "tags": ["deinopis", "burritbot", "traces", "gen_ai"],
+  "tags": ["burritbot", "burritbot", "traces", "gen_ai"],
   "schemaVersion": 38,
   "version": 1,
   "refresh": "30s",
@@ -31,7 +31,7 @@
       "title": "p95 latency by path (guarded vs unguarded)",
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum(rate(deinopis_burritbot_request_duration_seconds_bucket[5m])) by (le, guarded))",
+          "expr": "histogram_quantile(0.95, sum(rate(burritbot_burritbot_request_duration_seconds_bucket[5m])) by (le, guarded))",
           "refId": "A"
         }
       ],

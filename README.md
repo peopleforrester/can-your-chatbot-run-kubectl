@@ -1,4 +1,4 @@
-# Deinopis — Can Your Chatbot Run kubectl?
+# burritbot — Can Your Chatbot Run kubectl?
 
 Demo platform for the KubeCon NA 2026 talk
 **"Can Your Chatbot Run kubectl? Guardrails for LLMs on Kubernetes"**
@@ -6,8 +6,8 @@ co-presented by **Whitney Lee** and **Michael Forrester** in Salt Lake City.
 
 ## The Name
 
-**Deinopis** is the ogre-faced spider. Unlike most spiders that build a
-passive web and wait, Deinopis holds a net between its front legs, watches
+**burritbot** is the ogre-faced spider. Unlike most spiders that build a
+passive web and wait, burritbot holds a net between its front legs, watches
 with the largest eyes of any spider, and actively casts the net over anything
 that walks underneath. That hunting strategy *is* the architecture of this
 demo:
@@ -21,7 +21,7 @@ demo:
   belong.
 
 Two spiders, two roles, one architecture: spinybacked-orbweaver instruments,
-Deinopis enforces. The chatbot itself stays friendly and keeps its name —
+burritbot enforces. The chatbot itself stays friendly and keeps its name —
 **BurritBot** — because the demo opens with the viral Chipotle chatbot
 incident (order a burrito, also reverse a linked list in Python).
 
@@ -35,7 +35,7 @@ Two acts, one burrito shop.
   complies with all of them. The same pattern that let Chipotle's customer
   support bot explain O(n) linked list reversal happens again, live.
 - **Act 2 — Guarded.** The same chatbot runs in a second namespace behind
-  the Deinopis net (Envoy AI Gateway → NeMo Guardrails → LLM Guard →
+  the burritbot net (Envoy AI Gateway → NeMo Guardrails → LLM Guard →
   Vertex AI), with Kyverno policies, Falco AI-workload rules, and OTel GenAI
   semantic conventions wired through to a live Grafana dashboard. The
   audience runs the same attacks and watches them get blocked, logged, and

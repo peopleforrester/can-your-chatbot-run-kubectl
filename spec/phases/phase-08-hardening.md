@@ -51,7 +51,7 @@ Static only — Phase 8 has no new live infrastructure:
 Resist. Write what happened in rehearsal.
 
 **Completion Promise:** `<promise>PHASE8_DONE</promise>` and, if every
-phase prior is also green, `<promise>DEINOPIS_COMPLETE</promise>`.
+phase prior is also green, `<promise>BURRITBOT_COMPLETE</promise>`.
 
 **Skill:** none — the runbook and scorecard are narrative artifacts
 specific to the demo.

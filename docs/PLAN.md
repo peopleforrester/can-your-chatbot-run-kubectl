@@ -1,4 +1,4 @@
-# Full Plan — Deinopis (Can Your Chatbot Run kubectl?)
+# Full Plan — burritbot (Can Your Chatbot Run kubectl?)
 
 Execution plan for the KubeCon NA 2026 demo platform. The authoritative spec
 is `BUILD-INSTRUCTIONS.md` (preserved verbatim with a preamble noting the two
@@ -22,12 +22,12 @@ do, in what order, with what reuse, and what decisions remain open.
   linked list in Python while trying to order a bowl. It is funny when it is
   a burrito bot; it is terrifying when it has access to your deployment
   pipeline.
-- **Metaphor:** Deinopis — the ogre-faced spider. Most spiders build a
-  passive web and wait. Deinopis holds a net between its front legs, watches
-  with the largest eyes of any spider, and actively casts the net over
-  anything that walks underneath. OTel + spinybacked-orbweaver are **The
-  Eyes**. NeMo + LLM Guard + Envoy AI Gateway + Kyverno + Falco are **The
-  Net**. Two spiders, one architecture.
+- **Metaphor:** The ogre-faced spider. Most spiders build a passive web and
+  wait. This one holds a net between its front legs, watches with the
+  largest eyes of any spider, and actively casts the net over anything that
+  walks underneath. OTel + spinybacked-orbweaver are **The Eyes**. NeMo +
+  LLM Guard + Envoy AI Gateway + Kyverno + Falco are **The Net** that the
+  burritbot platform casts over every prompt. Two spiders, one architecture.
 
 ## 2. Architecture at a Glance
 
@@ -37,7 +37,7 @@ do, in what order, with what reuse, and what decisions remain open.
 │   Namespaces                                                            │
 │   ──────────                                                            │
 │   argocd              monitoring         security                       │
-│   deinopis-net        burritbot-unguarded  burritbot-guarded            │
+│   burritbot-net        burritbot-unguarded  burritbot-guarded            │
 │   audience                                                              │
 │                                                                         │
 │   UNGUARDED path (naked, no net):                                       │
@@ -45,10 +45,10 @@ do, in what order, with what reuse, and what decisions remain open.
 │                                                                         │
 │   GUARDED path (caught by the net):                                     │
 │     audience-frontend                                                   │
-│        └─► burritbot-guarded ──► Envoy AI Gateway  (deinopis-net)       │
+│        └─► burritbot-guarded ──► Envoy AI Gateway  (burritbot-net)       │
 │                                      └─► NeMo Guardrails (Colang)      │
 │                                      └─► LLM Guard (scanners)          │
-│                                      └─► Vertex AI (Gemini 2.5 Flash)  │
+│                                      └─► Vertex AI (Gemini 3 Pro)      │
 │                                                                         │
 │   The Eyes (observability):                                             │
 │     • OTel Collector with gen_ai.* semantic conventions                 │
@@ -58,7 +58,7 @@ do, in what order, with what reuse, and what decisions remain open.
 │   The Net (enforcement, cross-cutting):                                 │
 │     • Kyverno (AI workload policies, sidecar enforcement, provenance)  │
 │     • Falco (AI-workload runtime rules, shell detection, egress watch)│
-│     • Envoy AI Gateway + NeMo + LLM Guard (in deinopis-net)            │
+│     • Envoy AI Gateway + NeMo + LLM Guard (in burritbot-net)            │
 │                                                                         │
 │   Supporting web:                                                       │
 │     • External Secrets Operator ← GCP Secret Manager                    │
@@ -78,10 +78,10 @@ once tests are green.
 
 | # | Phase | Budget | Key deliverables | Kubeauto reuse |
 |---|-------|--------|------------------|----------------|
-| 1 | GKE Foundation | 90 min | Terraform: VPC, GKE Standard + NAP, WIF, Secret Manager, namespaces (incl. `deinopis-net`) | Terraform *structure* only; rewrite all resources for GCP |
+| 1 | GKE Foundation | 90 min | Terraform: VPC, GKE Standard + NAP, WIF, Secret Manager, namespaces (incl. `burritbot-net`) | Terraform *structure* only; rewrite all resources for GCP |
 | 2 | GitOps Bootstrap | 60 min | ArgoCD install, app-of-apps root, sync wave plan | Reuse app-of-apps pattern, RBAC, sync-wave convention |
 | 3 | The Eyes | 90 min | Prom + Grafana + OTel Collector with `gen_ai.*` processors; 3 dashboards (the-eyes-overview, prompt-response-traces, cast-net-comparison); spinybacked-orbweaver auto-instrumentation | Reuse OTel wiring skill and base values; extend with GenAI conventions |
-| 4 | The Net — Security | 120 min | Kyverno AI policies (provenance, sidecar, OTel annotations — all with `deinopis.io/layer: the-net` labels), Falco AI-workload rules tagged `[deinopis, the-net, ...]`, network policies | Reuse disallow-privileged, require-labels, require-resource-limits, require-probes, default-deny; extend falco base rules |
+| 4 | The Net — Security | 120 min | Kyverno AI policies (provenance, sidecar, OTel annotations — all with `burritbot.io/layer: the-net` labels), Falco AI-workload rules tagged `[burritbot, the-net, ...]`, network policies | Reuse disallow-privileged, require-labels, require-resource-limits, require-probes, default-deny; extend falco base rules |
 | 5 | The Net — AI Gateway | 120 min | Envoy AI Gateway, NeMo Guardrails (Colang: burrito-only, jailbreak-detect, topic-enforcement, output-sanitize), LLM Guard (input+output scanners) | None — all new |
 | 6 | BurritBot | 90 min | FastAPI app (Dockerfile, app.py **with `gemini-3-pro` via `google-genai`**, system prompt), unguarded + guarded deployments | None — all new |
 | 7 | Audience Frontend | 60 min | Mobile web UI, QR code, WebSocket, FastAPI proxy, rate limiting (10 req/min/IP) | None — all new |
@@ -100,7 +100,7 @@ it from that path directly.
 See `KUBEAUTO-REUSE-MAP.md` for the per-file decision matrix (copy / adapt /
 extend / ignore). Highlights:
 
-- **Copy-with-rename to GKE / Deinopis context:** `.claude/commands/build-phase.md`,
+- **Copy-with-rename to GKE / burritbot context:** `.claude/commands/build-phase.md`,
   `.claude/commands/validate-phase.md`, `.claude/skills/argocd-patterns.md`,
   `gitops/bootstrap/app-of-apps.yaml`, several Kyverno policies, the tests/
   helper structure.
@@ -108,8 +108,8 @@ extend / ignore). Highlights:
   Falco install (must work on GKE Standard + NAP), External Secrets
   configuration (AWS SM → GCP SM).
 - **Extend (base + AI-specific additions):** Kyverno policies (add AI sidecar,
-  model provenance, OTel annotations, all tagged `deinopis.io/layer: the-net`),
-  Falco rules (add AI workload rules with `[deinopis, the-net, ...]` tags),
+  model provenance, OTel annotations, all tagged `burritbot.io/layer: the-net`),
+  Falco rules (add AI workload rules with `[burritbot, the-net, ...]` tags),
   OTel collector (add GenAI semconv processors).
 - **Do not reuse:** `infrastructure/terraform/*` (rewrite for GCP), Backstage,
   Crossplane, EKS addons, any AWS IAM / IRSA / ACM references.
@@ -158,7 +158,7 @@ so prefer live-check over stale map.
 
 | # | Decision | Default | Confirm by |
 |---|----------|---------|------------|
-| 1 | GCP project ID | `deinopis-kubecon-2026` | Phase 1 cluster bring-up |
+| 1 | GCP project ID | `burritbot-kubecon-2026` | Phase 1 cluster bring-up |
 | 2 | Region | `us-west1` (close to SLC) | Phase 1 cluster bring-up |
 | 3 | GKE mode | **Standard + node auto-provisioning** (non-negotiable; Falco DaemonSets) | Locked |
 | 4 | Gemini model | `gemini-3-pro` (GA) via `google-genai` | Phase 6 app deploy |

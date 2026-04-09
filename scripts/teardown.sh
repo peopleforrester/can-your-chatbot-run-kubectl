@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ABOUTME: Post-talk teardown — destroys the Terraform-managed Deinopis platform.
+# ABOUTME: Post-talk teardown — destroys the Terraform-managed burritbot platform.
 # ABOUTME: Prompts for confirmation, scales ArgoCD down first, then runs terraform destroy.
 set -euo pipefail
 
@@ -19,7 +19,7 @@ Usage: ${SCRIPT_NAME} [--yes]
 
   Pre-requisites:
     - terraform on PATH (>= 1.8.0)
-    - kubectl on PATH with a loaded kubeconfig for the Deinopis cluster
+    - kubectl on PATH with a loaded kubeconfig for the burritbot cluster
     - GOOGLE_APPLICATION_CREDENTIALS or gcloud ADC ready
 
 Options:
@@ -97,7 +97,7 @@ main() {
     require_command kubectl
 
     if [[ "${yes_flag}" != "true" ]]; then
-        confirm "About to DESTROY the Deinopis cluster and all GCP resources"
+        confirm "About to DESTROY the burritbot cluster and all GCP resources"
     fi
 
     scale_argocd_down

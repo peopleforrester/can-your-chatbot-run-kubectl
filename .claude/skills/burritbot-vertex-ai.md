@@ -157,7 +157,7 @@ Four files under `apps/burritbot/k8s/`:
 
 - `deployment-unguarded.yaml` — namespace `burritbot-unguarded`
 - `deployment-guarded.yaml` — namespace `burritbot-guarded`, full
-  `deinopis.io/*` label set
+  `burritbot.io/*` label set
 - `service-unguarded.yaml`
 - `service-guarded.yaml`
 
@@ -168,12 +168,12 @@ metadata:
   namespace: burritbot-guarded
   labels:
     app.kubernetes.io/name: burritbot
-    deinopis.io/layer: the-net
-    deinopis.io/model-source: vertex-ai/gemini-3-pro
-    deinopis.io/model-hash: sha256:deadbeef  # pinned per build
+    burritbot.io/layer: the-net
+    burritbot.io/model-source: vertex-ai/gemini-3-pro
+    burritbot.io/model-hash: sha256:deadbeef  # pinned per build
 ```
 
-The `deinopis.io/model-hash` is a deliberate forcing function: the
+The `burritbot.io/model-hash` is a deliberate forcing function: the
 pipeline has to compute and write the actual model version hash into
 the manifest. If that value is fake, the demo is dishonest.
 

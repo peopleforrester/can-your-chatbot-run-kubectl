@@ -17,7 +17,7 @@ source:
     path: ./fixtures/recorded-burritbot-spans.jsonl
 
 # Attribute weights — getting gen_ai.request.model wrong is a much bigger
-# demo failure than missing deinopis.guarded, so weight them accordingly.
+# demo failure than missing burritbot.guarded, so weight them accordingly.
 # Note: `gen_ai.provider.name` replaced `gen_ai.system` in OTel semconv
 # v1.37.0; Vertex AI is now identified as `gcp.vertex_ai`.
 weights:
@@ -25,8 +25,8 @@ weights:
   gen_ai.request.model: 1.0
   gen_ai.usage.input_tokens: 0.8
   gen_ai.usage.output_tokens: 0.8
-  deinopis.layer: 0.5
-  deinopis.guarded: 0.5
+  burritbot.layer: 0.5
+  burritbot.guarded: 0.5
 
 report:
   output: ./reports/orbweaver-latest.json

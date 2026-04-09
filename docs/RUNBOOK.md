@@ -1,6 +1,6 @@
-# Deinopis Demo-Day Runbook
+# burritbot Demo-Day Runbook
 
-Operational runbook for running the Deinopis demo live at KubeCon NA 2026.
+Operational runbook for running the burritbot demo live at KubeCon NA 2026.
 Every section here is something Whitney or Michael should be able to run
 without thinking — this is the "chess clock is ticking" document, not the
 architecture doc.
@@ -19,9 +19,9 @@ Run this checklist T-60 minutes before the talk. Everything here is
    ```
    Expect: all nodes `Ready`, no `NotReady` or `SchedulingDisabled`.
 
-2. **All Deinopis namespaces exist:**
+2. **All burritbot namespaces exist:**
    ```bash
-   kubectl get ns argocd monitoring security deinopis-net \
+   kubectl get ns argocd monitoring security burritbot-net \
      burritbot-unguarded burritbot-guarded audience
    ```
    Expect: 7 × `Active`.
@@ -35,7 +35,7 @@ Run this checklist T-60 minutes before the talk. Everything here is
 
 4. **Guarded path pods alive:**
    ```bash
-   kubectl -n deinopis-net get pods -l app.kubernetes.io/part-of=deinopis
+   kubectl -n burritbot-net get pods -l app.kubernetes.io/part-of=burritbot
    kubectl -n burritbot-guarded get pods
    kubectl -n burritbot-unguarded get pods
    ```
@@ -50,7 +50,7 @@ Run this checklist T-60 minutes before the talk. Everything here is
    `desired == ready`.
 
 6. **Observability dashboards load:**
-   Open Grafana. Verify the three Deinopis dashboards render with live
+   Open Grafana. Verify the three burritbot dashboards render with live
    data: `The Eyes — Overview`, `BurritBot Prompt / Response Traces`,
    `Cast the Net — Before / After Comparison`.
 
@@ -125,7 +125,7 @@ Same audience, same prompts — The Net catches the problems.
      attributes — you can see them in the trace table.
    - **The Net**: NeMo Colang rails refuse off-topic and jailbreak
      attempts. The content scanners block prompt-injection and sanitize
-     model replies. Kyverno enforces deinopis.io labels on every guarded
+     model replies. Kyverno enforces burritbot.io labels on every guarded
      pod. Falco alerts on any shell that escapes.
    - **The Web**: ArgoCD sync status, Gateway API routes, SPIFFE
      identities — the platform scaffolding holding the live demo up.

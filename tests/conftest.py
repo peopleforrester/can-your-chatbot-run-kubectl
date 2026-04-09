@@ -1,4 +1,4 @@
-# ABOUTME: Shared pytest fixtures for Deinopis integration tests.
+# ABOUTME: Shared pytest fixtures for burritbot integration tests.
 # ABOUTME: Provides Kubernetes clients, GCP clients, and project-wide constants.
 
 from __future__ import annotations
@@ -16,22 +16,22 @@ import pytest
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 TERRAFORM_DIR = PROJECT_ROOT / "infrastructure" / "terraform"
 
-GCP_PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "deinopis-kubecon-2026")
+GCP_PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "burritbot-kubecon-2026")
 GCP_REGION = os.environ.get("GCP_REGION", "us-west1")
-CLUSTER_NAME = os.environ.get("CLUSTER_NAME", "deinopis")
+CLUSTER_NAME = os.environ.get("CLUSTER_NAME", "burritbot")
 
 # Gemini model pin — Gemini 3 Pro is the GA default for this demo.
 # Do not regress to 1.5 (unsupported), 2.0 (retired), or 2.5 (retires
 # 2026-10-16 — before KubeCon NA 2026).
 GEMINI_MODEL = os.environ.get("MODEL_NAME", "gemini-3-pro")
 
-# Namespaces the platform must provision. Note `deinopis-net` (not
+# Namespaces the platform must provision. Note `burritbot-net` (not
 # `guardrails`) — the enforcement stack lives in its own namespace.
 EXPECTED_NAMESPACES = [
     "argocd",
     "monitoring",
     "security",
-    "deinopis-net",
+    "burritbot-net",
     "burritbot-unguarded",
     "burritbot-guarded",
     "audience",
@@ -142,7 +142,7 @@ def cluster_name() -> str:
 
 @pytest.fixture(scope="session")
 def expected_namespaces() -> list[str]:
-    """Return the list of namespaces the Deinopis platform requires."""
+    """Return the list of namespaces the burritbot platform requires."""
     return list(EXPECTED_NAMESPACES)
 
 

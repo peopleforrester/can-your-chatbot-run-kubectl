@@ -1,17 +1,17 @@
 # ABOUTME: GKE Standard cluster with Node Auto-Provisioning and Workload Identity.
 # ABOUTME: Autopilot is explicitly off — Falco DaemonSet requires privileged containers.
 
-resource "google_container_cluster" "deinopis" {
+resource "google_container_cluster" "burritbot" {
   name     = var.cluster_name
   location = var.region
 
   # GKE Standard: do NOT enable Autopilot. Falco DaemonSet needs privileged
   # containers, which Autopilot forbids. This is the non-negotiable decision
-  # from the Deinopis spec.
+  # from the burritbot spec.
   enable_autopilot = false
 
-  network    = google_compute_network.deinopis.id
-  subnetwork = google_compute_subnetwork.deinopis.id
+  network    = google_compute_network.burritbot.id
+  subnetwork = google_compute_subnetwork.burritbot.id
 
   ip_allocation_policy {
     cluster_secondary_range_name  = "pods"

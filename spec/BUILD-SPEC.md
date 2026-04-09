@@ -1,4 +1,4 @@
-# Deinopis Build Spec
+# burritbot Build Spec
 
 ## Source of Truth
 
@@ -29,7 +29,7 @@ This directory (`spec/`) holds:
 
 ## Layer Mapping
 
-| Phase | Deinopis Layer | CNCF Projects |
+| Phase | burritbot Layer | CNCF Projects |
 |-------|---------------|---------------|
 | 1 | Foundation | Terraform, GKE |
 | 2 | The Web | ArgoCD, cert-manager, External Secrets |
@@ -54,5 +54,5 @@ Do not emit the promise unless every test for that phase passes
 When all eight phases are complete:
 
 ```
-<promise>DEINOPIS_COMPLETE</promise>
+<promise>BURRITBOT_COMPLETE</promise>
 ```
