@@ -1,0 +1,81 @@
+# ABOUTME: Unguarded BurritBot Deployment — no sidecars, no rails, direct to Vertex AI.
+# ABOUTME: The demo deliberately leaves this wide open so the audience can watch it fail.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: burritbot
+  namespace: burritbot-unguarded
+  labels:
+    app.kubernetes.io/name: burritbot
+    app.kubernetes.io/part-of: deinopis
+    deinopis.io/layer: application
+    deinopis.io/guarded: "false"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: burritbot
+      deinopis.io/guarded: "false"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: burritbot
+        app.kubernetes.io/part-of: deinopis
+        deinopis.io/layer: application
+        deinopis.io/guarded: "false"
+    spec:
+      serviceAccountName: burritbot
+      automountServiceAccountToken: true
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: burritbot
+          image: us-west1-docker.pkg.dev/REPLACE_WITH_PROJECT/deinopis/burritbot:0.1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: MODEL_NAME
+              value: gemini-2.5-flash
+            - name: GOOGLE_CLOUD_PROJECT
+              value: REPLACE_WITH_PROJECT
+            - name: GOOGLE_CLOUD_LOCATION
+              value: us-west1
+            - name: BURRITBOT_GUARDED
+              value: "false"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

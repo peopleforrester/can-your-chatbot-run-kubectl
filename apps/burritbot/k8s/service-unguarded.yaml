@@ -1,0 +1,23 @@
+# ABOUTME: ClusterIP Service for the unguarded BurritBot — no ingress, cluster-internal only.
+# ABOUTME: Audience frontend reaches this directly during Act 1.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: burritbot-unguarded
+  namespace: burritbot-unguarded
+  labels:
+    app.kubernetes.io/name: burritbot
+    app.kubernetes.io/part-of: deinopis
+    deinopis.io/layer: application
+    deinopis.io/guarded: "false"
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: burritbot
+    deinopis.io/guarded: "false"
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+      protocol: TCP
