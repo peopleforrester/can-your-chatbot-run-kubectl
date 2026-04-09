@@ -1,0 +1,9 @@
+# ABOUTME: Example tfvars — copy to terraform.tfvars and fill in real values.
+# ABOUTME: Real tfvars files are gitignored; this example contains no live IDs.
+
+# Required — override with the real project ID before apply.
+project_id = "REPLACE_WITH_YOUR_GCP_PROJECT_ID"
+
+# Optional — defaults are in variables.tf.
+region       = "us-west1"
+cluster_name = "deinopis"

@@ -1,0 +1,101 @@
+# ABOUTME: GKE Standard cluster with Node Auto-Provisioning and Workload Identity.
+# ABOUTME: Autopilot is explicitly off — Falco DaemonSet requires privileged containers.
+
+resource "google_container_cluster" "deinopis" {
+  name     = var.cluster_name
+  location = var.region
+
+  # GKE Standard: do NOT enable Autopilot. Falco DaemonSet needs privileged
+  # containers, which Autopilot forbids. This is the non-negotiable decision
+  # from the Deinopis spec.
+  enable_autopilot = false
+
+  network    = google_compute_network.deinopis.id
+  subnetwork = google_compute_subnetwork.deinopis.id
+
+  ip_allocation_policy {
+    cluster_secondary_range_name  = "pods"
+    services_secondary_range_name = "services"
+  }
+
+  # Workload Identity Federation — no JSON service-account keys anywhere.
+  workload_identity_config {
+    workload_pool = "${var.project_id}.svc.id.goog"
+  }
+
+  # Node Auto-Provisioning with resource limits (required, otherwise NAP is
+  # inert). These limits are conservative demo-day budgets.
+  cluster_autoscaling {
+    enabled = true
+
+    auto_provisioning_defaults {
+      service_account = google_service_account.nodes.email
+      oauth_scopes    = ["https://www.googleapis.com/auth/cloud-platform"]
+
+      management {
+        auto_repair  = true
+        auto_upgrade = true
+      }
+
+      shielded_instance_config {
+        enable_secure_boot          = true
+        enable_integrity_monitoring = true
+      }
+    }
+
+    resource_limits {
+      resource_type = "cpu"
+      minimum       = 4
+      maximum       = 32
+    }
+
+    resource_limits {
+      resource_type = "memory"
+      minimum       = 16
+      maximum       = 128
+    }
+  }
+
+  release_channel {
+    channel = "REGULAR"
+  }
+
+  # Initial node pool is removed — NAP provisions the real pools. GKE
+  # requires a default pool exist at creation, so we create a minimal one
+  # and then remove it in a follow-up.
+  initial_node_count       = 1
+  remove_default_node_pool = true
+
+  # Minimal dataplane and addons tuned for the demo.
+  datapath_provider = "ADVANCED_DATAPATH"
+
+  addons_config {
+    http_load_balancing {
+      disabled = false
+    }
+    horizontal_pod_autoscaling {
+      disabled = false
+    }
+    network_policy_config {
+      disabled = false
+    }
+  }
+
+  network_policy {
+    enabled  = true
+    provider = "CALICO"
+  }
+
+  logging_config {
+    enable_components = ["SYSTEM_COMPONENTS", "WORKLOADS"]
+  }
+
+  monitoring_config {
+    enable_components = ["SYSTEM_COMPONENTS"]
+    managed_prometheus {
+      enabled = true
+    }
+  }
+
+  deletion_protection = false
+}

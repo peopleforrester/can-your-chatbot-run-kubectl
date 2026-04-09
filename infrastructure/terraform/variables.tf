@@ -1,0 +1,67 @@
+# ABOUTME: Terraform input variables for Deinopis GCP foundation.
+# ABOUTME: All defaults are Phase 1 placeholders — override in terraform.tfvars.
+
+variable "project_id" {
+  description = "GCP project ID hosting the Deinopis demo cluster."
+  type        = string
+}
+
+variable "region" {
+  description = "GCP region for the GKE cluster and regional resources."
+  type        = string
+  default     = "us-west1"
+}
+
+variable "cluster_name" {
+  description = "Name of the GKE Standard cluster."
+  type        = string
+  default     = "deinopis"
+}
+
+variable "network_name" {
+  description = "Name of the VPC network."
+  type        = string
+  default     = "deinopis-vpc"
+}
+
+variable "subnet_name" {
+  description = "Name of the regional subnetwork."
+  type        = string
+  default     = "deinopis-subnet"
+}
+
+variable "subnet_cidr" {
+  description = "Primary CIDR range for the GKE subnet."
+  type        = string
+  default     = "10.20.0.0/20"
+}
+
+variable "pods_cidr" {
+  description = "Secondary range for pod IPs."
+  type        = string
+  default     = "10.24.0.0/14"
+}
+
+variable "services_cidr" {
+  description = "Secondary range for Kubernetes service IPs."
+  type        = string
+  default     = "10.28.0.0/20"
+}
+
+variable "node_service_account_id" {
+  description = "Account ID of the GKE node service account (no JSON keys)."
+  type        = string
+  default     = "deinopis-gke-nodes"
+}
+
+variable "workload_service_account_id" {
+  description = "Account ID of the WIF-bound workload service account."
+  type        = string
+  default     = "deinopis-workload"
+}
+
+variable "vertex_secret_id" {
+  description = "Secret Manager secret ID holding any Vertex AI quota metadata."
+  type        = string
+  default     = "deinopis-vertex-ai"
+}
