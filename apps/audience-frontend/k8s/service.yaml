@@ -1,0 +1,21 @@
+# ABOUTME: ClusterIP Service for the audience frontend — fronted by an Ingress at demo time.
+# ABOUTME: Listens on 8080 and matches the audience-frontend Deployment label.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: audience-frontend
+  namespace: audience
+  labels:
+    app.kubernetes.io/name: audience-frontend
+    app.kubernetes.io/part-of: deinopis
+    deinopis.io/layer: application
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: audience-frontend
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
