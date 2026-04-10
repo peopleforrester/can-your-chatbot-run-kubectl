@@ -74,13 +74,17 @@ def test_research_script_has_aboutme() -> None:
 
 
 @pytest.mark.static
-def test_gitignore_excludes_binary_outputs() -> None:
-    """chatbot-research/.gitignore excludes screenshots/ and results/."""
+def test_research_outputs_not_gitignored() -> None:
+    """screenshots/ and results/ are NOT gitignored — they are the deliverables."""
     gi = RESEARCH_DIR / ".gitignore"
-    assert gi.exists(), "chatbot-research/.gitignore is missing"
-    text = gi.read_text(encoding="utf-8")
-    assert "screenshots/" in text, ".gitignore should exclude screenshots/"
-    assert "results/" in text, ".gitignore should exclude results/"
+    if gi.exists():
+        text = gi.read_text(encoding="utf-8")
+        assert "screenshots/" not in text, (
+            "screenshots/ should NOT be gitignored — they are research output"
+        )
+        assert "results/" not in text, (
+            "results/ should NOT be gitignored — they are research output"
+        )
 
 
 @pytest.mark.static

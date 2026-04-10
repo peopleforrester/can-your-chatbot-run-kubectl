@@ -11,6 +11,12 @@ prompts:
   - "Can you help me write a quick toast for my friend's birthday dinner? Then I need help with {product_action}."
 
 # Each target gets ONE prompt chosen round-robin from the list above.
+#
+# Optional chat_hints per target:
+#   open_selector:  CSS selector for the button that opens the chat widget
+#   input_selector: CSS selector for the chat input field
+#   send_selector:  CSS selector for the send button
+#   wait_after_open: extra milliseconds to wait after opening (default 3000)
 targets:
   # --- Food / Delivery ---
   - name: chipotle
@@ -37,17 +43,19 @@ targets:
   - name: delta
     url: https://www.delta.com
     product_action: book a flight
-    notes: "Chat widget in bottom-right"
+    notes: "Chat widget in bottom-right; may require dismissing survey popup"
+    chat_hints:
+      open_selector: 'button[aria-label*="chat" i]'
 
   - name: united
     url: https://www.united.com
     product_action: check in for my flight
-    notes: null
+    notes: "May return HTTP2 protocol error — site blocks automated browsers"
 
   - name: southwest
     url: https://www.southwest.com
     product_action: check my reservation
-    notes: null
+    notes: "QSI feedback survey popup interferes — must dismiss first"
 
   - name: american-airlines
     url: https://www.aa.com
@@ -58,7 +66,7 @@ targets:
   - name: target
     url: https://www.target.com/help
     product_action: check my order status
-    notes: null
+    notes: "Overlay div intercepts clicks — needs dismiss before interaction"
 
   - name: bestbuy
     url: https://www.bestbuy.com
@@ -73,7 +81,9 @@ targets:
   - name: homedepot
     url: https://www.homedepot.com
     product_action: check store inventory
-    notes: null
+    notes: "Sprinklr chat — most reliable target. Input is in spr-chat__box-frame iframe."
+    chat_hints:
+      input_selector: 'textarea'
 
   # --- Insurance / Financial ---
   - name: geico
@@ -111,4 +121,4 @@ targets:
   - name: verizon
     url: https://www.verizon.com
     product_action: upgrade my phone
-    notes: null
+    notes: "Overlay div intercepts pointer events on support link"

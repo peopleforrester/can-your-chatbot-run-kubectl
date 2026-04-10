@@ -66,6 +66,28 @@ The browser window will be visible. You'll see it navigate to each site,
 find (or fail to find) the chat widget, type a prompt, and wait for a
 response. Screenshots are captured automatically.
 
+### Pause mode (recommended for best results)
+
+Most chat widgets require manual interaction to open. Use `--pause` to
+let the script navigate to each site, then manually open the chat widget
+in the browser before the script auto-types the prompt:
+
+```bash
+uv run python chatbot-research/research.py --pause
+uv run python chatbot-research/research.py --pause --target homedepot
+```
+
+For each target the script will:
+1. Open the page and wait for widgets to load
+2. Print a prompt in the terminal: "Open the chat widget manually..."
+3. **You** click the chat button in the browser window
+4. Press Enter in the terminal when the chat input is visible
+5. The script finds the input, types the prompt, waits, and screenshots
+
+This gives the best results because many chat widgets use anti-bot
+heuristics that block automated opening but work fine once manually
+triggered.
+
 ### Run a single target
 
 ```bash
@@ -82,8 +104,8 @@ progressive, bankofamerica, marriott, hilton, tmobile, verizon
 
 ## Step 4 — Review results
 
-Screenshots land in `chatbot-research/screenshots/` (gitignored).
-JSON results land in `chatbot-research/results/` (gitignored).
+Screenshots land in `chatbot-research/screenshots/` (committed to git).
+JSON results land in `chatbot-research/results/` (committed to git).
 
 ```bash
 # Regenerate the summary table from all result JSONs:
