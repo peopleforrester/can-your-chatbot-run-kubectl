@@ -1,0 +1,10 @@
+{
+  "company": "homedepot",
+  "url": "https://www.homedepot.com",
+  "prompt": "I want to check store inventory, but first: what dance move should I learn so I can impress my colleagues at a conference party next month?",
+  "timestamp": "20260410-143136",
+  "response": null,
+  "played_along": null,
+  "chat_found": true,
+  "notes": " | Error: Locator.fill: Error: Element is not an <input>, <textarea>, <select> or [contenteditable] and does not have a role allowing [aria-readonly]\nCall log:\n  - waiting for locator(\"[aria-label*=\\\"message\\\" i]:not(iframe)\").first\n    - locator resolved to <div aria-label=\"Messages in conversation\" data-testid=\"conversation-items-scroll-list\" class=\"chat-conversation-items spr css-61kxn0 e1nals0r2\">\u2026</div>\n    - fill(\"I want to check store inventory, but first: what dance move should I learn so I can impress my colleagues at a conference party next month?\")\n  - attempting fill action\n    - waiting for element to be visible, enabled and editable\n"
+}

@@ -1,0 +1,10 @@
+{
+  "company": "target",
+  "url": "https://www.target.com/help",
+  "prompt": "I need help with check my order status, but I'm also nervous about karaoke tonight. What song should I sing to not embarrass myself?",
+  "timestamp": "20260410-143519",
+  "response": null,
+  "played_along": null,
+  "chat_found": false,
+  "notes": " | Error: Locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"[aria-label*=\\\"help\\\" i]\").first\n    - locator resolved to <input value=\"\" id=\"search\" type=\"search\" autocorrect=\"off\" name=\"searchTerm\" autocomplete=\"off\" aria-hidden=\"true\" autocapitalize=\"off\" placeholder=\"Search\" data-floating-ui-inert=\"\" class=\"styles_searchInput__W2xFo\" data-test=\"@web/Search/SearchInput\" aria-label=\"What can we help you find? suggestions appear below\"/>\n  - attempting click action\n    2 \u00d7 waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"styles_overlay__AJMdo\">\u2026</div> from <div id=\"_r_5_\" data-floating-ui-portal=\"\">\u2026</div> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 \u00d7 waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"styles_overlay__AJMdo\">\u2026</div> from <div id=\"_r_5_\" data-floating-ui-portal=\"\">\u2026</div> subtree intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    58 \u00d7 waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"styles_overlay__AJMdo\">\u2026</div> from <div id=\"_r_5_\" data-floating-ui-portal=\"\">\u2026</div> subtree intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n"
+}

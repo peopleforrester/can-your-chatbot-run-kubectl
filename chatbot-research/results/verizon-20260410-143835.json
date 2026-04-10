@@ -1,0 +1,10 @@
+{
+  "company": "verizon",
+  "url": "https://www.verizon.com",
+  "prompt": "I want to upgrade my phone, but first: what dance move should I learn so I can impress my colleagues at a conference party next month?",
+  "timestamp": "20260410-143835",
+  "response": null,
+  "played_along": null,
+  "chat_found": false,
+  "notes": " | Error: Locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"[aria-label*=\\\"support\\\" i]\").first\n    - locator resolved to <a href=\"tel:+18338374966\" data-label=\"1-833-VERIZON\" data-track=\"global nav:1-833-verizon\" aria-label=\"Call Verizon 1-833-VERIZON for sales and support assistance.\">\u21b5\u21c6\u21c6\u21c6\u21b5\u21c6\u21c6\u21c61-833-VERIZON\u21b5\u21c6\u21c6\u21c6\u21b5\u21c6\u21c6</a>\n  - attempting click action\n    2 \u00d7 waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div>\u2026</div> intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 \u00d7 waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div>\u2026</div> intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    58 \u00d7 waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div>\u2026</div> intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n"
+}
