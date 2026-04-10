@@ -83,18 +83,29 @@ CHAT_OPEN_SELECTORS = [
 ]
 
 CHAT_INPUT_SELECTORS = [
-    '[aria-label*="message" i]',
-    '[aria-label*="type" i]',
-    '[aria-label*="chat" i]',
-    '[placeholder*="message" i]',
-    '[placeholder*="type" i]',
-    '[placeholder*="ask" i]',
+    # Placeholder-based (most reliable — matches actual input elements).
+    'textarea[placeholder*="message" i]',
+    'textarea[placeholder*="type" i]',
+    'textarea[placeholder*="ask" i]',
+    'input[placeholder*="message" i]',
+    'input[placeholder*="type" i]',
+    'input[placeholder*="ask" i]',
+    # Aria-label on real input elements only (not divs or iframes).
+    'textarea[aria-label*="message" i]',
+    'textarea[aria-label*="type" i]',
+    'textarea[aria-label*="chat" i]',
+    'input[aria-label*="message" i]',
+    'input[aria-label*="type" i]',
+    'input[aria-label*="chat" i]',
+    # Name-based.
     'textarea[name*="message" i]',
     'input[name*="message" i]',
+    # Class/id-based.
     ".chat-input textarea",
     ".chat-input input",
     "#chat-input",
     '[data-testid="chat-input"]',
+    # Contenteditable as last resort.
     '[contenteditable="true"]',
 ]
 
@@ -132,16 +143,21 @@ async def try_selectors(page, selectors: list[str], *, timeout: int = 3000):
     return None
 
 
-async def check_for_iframe_chat(page):
-    """Some sites embed the chat in an iframe. Try to find and enter it."""
+async def check_for_iframe_chat(page) -> list:
+    """Some sites embed the chat in an iframe. Return all matching frames.
+
+    Returns a list so the caller can try each one until an input is found.
+    """
+    matches = []
     for frame in page.frames:
         name = frame.name or ""
         url = frame.url or ""
         if any(kw in name.lower() or kw in url.lower()
                for kw in ("chat", "widget", "intercom", "drift", "zendesk",
-                          "salesforce", "livechat", "freshchat")):
-            return frame
-    return None
+                          "salesforce", "livechat", "freshchat", "spr-",
+                          "sprinklr", "ada", "kustomer", "helpshift")):
+            matches.append(frame)
+    return matches
 
 
 async def test_chatbot(
@@ -212,14 +228,22 @@ async def test_chatbot(
             chat_opened = True
 
         # Step 2: check for iframe-embedded chat.
-        chat_frame = await check_for_iframe_chat(page)
-        context = chat_frame if chat_frame else page
+        chat_frames = await check_for_iframe_chat(page)
 
         # Step 3: find the input field.
-        input_field = await try_selectors(context, CHAT_INPUT_SELECTORS, timeout=5000)
-        if not input_field and chat_frame:
-            # Retry on main page if iframe had no input.
-            input_field = await try_selectors(page, CHAT_INPUT_SELECTORS, timeout=3000)
+        # Try each chat iframe's interior first, then fall back to the
+        # main page. Never run selectors against the page if the match
+        # would land on an <iframe> element — that causes fill() to fail.
+        input_field = None
+        context = page
+        for cf in chat_frames:
+            input_field = await try_selectors(cf, CHAT_INPUT_SELECTORS, timeout=3000)
+            if input_field:
+                context = cf
+                logger.info("[%s] found input inside chat iframe %r", name, cf.name)
+                break
+        if not input_field:
+            input_field = await try_selectors(page, CHAT_INPUT_SELECTORS, timeout=5000)
             context = page
 
         if not input_field:
