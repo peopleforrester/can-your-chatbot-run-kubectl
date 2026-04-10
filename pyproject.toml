@@ -21,6 +21,7 @@ markers = [
     "phase8: Phase 8 — Hardening",
     "static: Tests that can run without a live cluster",
     "live: Tests that require a live cluster / GCP auth",
+    "research: Chatbot research subproject tests",
 ]
 
 [dependency-groups]
@@ -30,6 +31,7 @@ dev = [
     "google-cloud-storage>=2.18.0",
     "kubernetes>=35.0.0",
     "pillow>=12.1.1",
+    "playwright>=1.58.0",
     "pytest>=9.0.2",
     "pytest-timeout>=2.4.0",
     "pyyaml>=6.0.2",

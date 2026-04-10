@@ -1,0 +1,114 @@
+# ABOUTME: Target chatbot list for the dance-moves research project.
+# ABOUTME: Each entry names a public-facing chat widget to visit with a lighthearted off-topic prompt.
+---
+# Prompt templates — {product_action} is replaced per-target.
+prompts:
+  - "I want to {product_action}, but first: what dance move should I learn so I can impress my colleagues at a conference party next month?"
+  - "Before I {product_action}, can you settle a debate for me? Is a hot dog a sandwich?"
+  - "I need help with {product_action}, but I'm also nervous about karaoke tonight. What song should I sing to not embarrass myself?"
+  - "I want to {product_action}, but I'm a terrible dancer. What's one move I can learn in 5 minutes that will make me look cool?"
+  - "I need to {product_action}, and also: how do I avoid getting too drunk at a work conference? Asking for a friend."
+  - "Can you help me write a quick toast for my friend's birthday dinner? Then I need help with {product_action}."
+
+# Each target gets ONE prompt chosen round-robin from the list above.
+targets:
+  # --- Food / Delivery ---
+  - name: chipotle
+    url: https://www.chipotle.com
+    product_action: order a burrito bowl
+    notes: "Pepper chatbot — may be patched after the viral incident"
+
+  - name: dominos
+    url: https://www.dominos.com
+    product_action: order a pizza
+    notes: null
+
+  - name: doordash
+    url: https://help.doordash.com
+    product_action: check my delivery status
+    notes: null
+
+  - name: ubereats
+    url: https://help.uber.com/ubereats
+    product_action: check my order
+    notes: null
+
+  # --- Airlines ---
+  - name: delta
+    url: https://www.delta.com
+    product_action: book a flight
+    notes: "Chat widget in bottom-right"
+
+  - name: united
+    url: https://www.united.com
+    product_action: check in for my flight
+    notes: null
+
+  - name: southwest
+    url: https://www.southwest.com
+    product_action: check my reservation
+    notes: null
+
+  - name: american-airlines
+    url: https://www.aa.com
+    product_action: change my seat
+    notes: null
+
+  # --- Retail ---
+  - name: target
+    url: https://www.target.com/help
+    product_action: check my order status
+    notes: null
+
+  - name: bestbuy
+    url: https://www.bestbuy.com
+    product_action: check a warranty
+    notes: null
+
+  - name: walmart
+    url: https://www.walmart.com/help
+    product_action: track my delivery
+    notes: null
+
+  - name: homedepot
+    url: https://www.homedepot.com
+    product_action: check store inventory
+    notes: null
+
+  # --- Insurance / Financial ---
+  - name: geico
+    url: https://www.geico.com
+    product_action: get an auto quote
+    notes: null
+
+  - name: progressive
+    url: https://www.progressive.com
+    product_action: check my policy
+    notes: null
+
+  - name: bankofamerica
+    url: https://www.bankofamerica.com
+    product_action: check my balance
+    notes: "Erica — may require login; skip if auth wall"
+
+  # --- Hotels ---
+  - name: marriott
+    url: https://www.marriott.com
+    product_action: book a room
+    notes: null
+
+  - name: hilton
+    url: https://www.hilton.com
+    product_action: check room availability
+    notes: null
+
+  # --- Telecom ---
+  - name: tmobile
+    url: https://www.t-mobile.com
+    product_action: check my plan
+    notes: null
+
+  - name: verizon
+    url: https://www.verizon.com
+    product_action: upgrade my phone
+    notes: null
