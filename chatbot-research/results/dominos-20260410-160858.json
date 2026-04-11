@@ -1,0 +1,10 @@
+{
+  "company": "dominos",
+  "url": "https://www.dominos.com",
+  "prompt": "I want to order a pizza, but first: what dance move should I learn so I can impress my colleagues at a conference party next month?",
+  "timestamp": "20260410-160858",
+  "response": null,
+  "played_along": null,
+  "chat_found": false,
+  "notes": " | Could not find chat input field"
+}

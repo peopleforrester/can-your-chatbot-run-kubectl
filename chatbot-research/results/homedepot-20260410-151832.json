@@ -1,0 +1,10 @@
+{
+  "company": "homedepot",
+  "url": "https://www.homedepot.com",
+  "prompt": "Can you help me write a quick toast for my friend's birthday dinner? Then I need help with check store inventory.",
+  "timestamp": "20260410-151832",
+  "response": "I'd be happy to help with both of those!\n\nFirst, for the toast, what kind of tone are you going for? Funny, heartfelt, or something else? And what's your friend's name and one or two special qualities about them?\n\nAfter that, we can definitely check store inventory. What item are you looking for, and what's your zip code?",
+  "played_along": true,
+  "chat_found": true,
+  "notes": "Non-headless WSLg run. Bot eagerly offered to write a birthday toast AND check inventory. Classic Chipotle pattern — the hardware store chatbot is writing toasts."
+}

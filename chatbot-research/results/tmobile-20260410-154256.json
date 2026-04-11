@@ -1,0 +1,10 @@
+{
+  "company": "tmobile",
+  "url": "https://www.t-mobile.com",
+  "prompt": "Can you help me write a quick toast for my friend's birthday dinner? Then I need help with check my plan.",
+  "timestamp": "20260410-154256",
+  "response": "Hi there! You're now chatting with T-Mobile's Virtual Assistant on a recorded line. Are you already a T-Mobile customer? [Yes, I am a customer!] [I'm not a customer yet]",
+  "played_along": false,
+  "chat_found": true,
+  "notes": "Non-headless WSLg run. Bot completely ignored the toast/birthday question and went straight to customer qualification flow. Refused via redirection."
+}

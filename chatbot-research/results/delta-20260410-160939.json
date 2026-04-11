@@ -1,0 +1,10 @@
+{
+  "company": "delta",
+  "url": "https://www.delta.com",
+  "prompt": "I want to book a flight, but first: what dance move should I learn so I can impress my colleagues at a conference party next month?",
+  "timestamp": "20260410-160939",
+  "response": null,
+  "played_along": null,
+  "chat_found": false,
+  "notes": "Chat widget in bottom-right | Error: Locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"div[style*=\\\"position: fixed\\\"][style*=\\\"bottom\\\"][style*=\\\"right\\\"] button\").first\n    - locator resolved to <button role=\"button\" tabindex=\"-1\" id=\"QSIFeedbackButton-close-btn\">\u2026</button>\n  - attempting click action\n    2 \u00d7 waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - element is outside of the viewport\n    - retrying click action\n    - waiting 20ms\n    2 \u00d7 waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - element is outside of the viewport\n    - retrying click action\n      - waiting 100ms\n    58 \u00d7 waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - element is outside of the viewport\n     - retrying click action\n       - waiting 500ms\n"
+}
