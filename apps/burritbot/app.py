@@ -11,6 +11,7 @@ from typing import Any
 from fastapi import FastAPI, HTTPException, status
 from google import genai
 from google.genai import types
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger("burritbot")
@@ -108,6 +109,11 @@ def create_app() -> FastAPI:
             input_tokens=input_tokens,
             output_tokens=output_tokens,
         )
+
+    # Auto-instrument the FastAPI app so HTTP spans flow to the OTel collector.
+    # Endpoint, sampling, and resource attributes are read from OTEL_* env vars
+    # set on each Deployment (see deployment-{guarded,unguarded}.yaml).
+    FastAPIInstrumentor.instrument_app(app)
 
     return app
 
