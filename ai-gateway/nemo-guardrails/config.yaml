@@ -42,4 +42,9 @@ instructions:
 passthrough: false
 streaming: false
 
-colang_version: "2.x"
+# All four .co files under rails/ use Colang 1.0 syntax (`define user ...`,
+# `define bot ...`, `flow ... abort`). Colang 2.x has a different grammar
+# (`flow user expressed ...`, `user said "..."`, `await`). Live verification
+# against a NeMo Guardrails 0.11 container is still pending — see
+# docs/CRITICAL-FIXES-PLAN.md (deferred items).
+colang_version: "1.0"
