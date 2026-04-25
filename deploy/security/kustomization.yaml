@@ -1,0 +1,15 @@
+# ABOUTME: ArgoCD sync target for The Net — Kyverno ClusterPolicies (cluster-scoped CRDs).
+# ABOUTME: Falco rules need ConfigMap wrapping (TODO below) before they can be referenced here.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../security/kyverno/policies/require-burritbot-labels.yaml
+  - ../../security/kyverno/policies/require-burritbot-sidecar-naming.yaml
+  - ../../security/kyverno/policies/restrict-burritbot-network.yaml
+
+# TODO(critical-fixes-plan): security/falco/rules/burritbot-the-net.yaml is
+# raw Falco rule YAML, not a Kubernetes manifest. It needs to be wrapped in
+# a ConfigMap (and a Falco DaemonSet referencing it) before it can be added
+# to `resources:`. Tracked as a follow-up — not in scope for the critical-
+# fixes pass.

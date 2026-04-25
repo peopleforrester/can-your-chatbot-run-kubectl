@@ -1,0 +1,13 @@
+# ABOUTME: ArgoCD sync target for The Net — Envoy AI Gateway custom resources.
+# ABOUTME: NeMo Guardrails + LLM Guard need Deployment manifests (TODO below) to be added here.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../ai-gateway/envoy/gateway.yaml
+
+# TODO(critical-fixes-plan): ai-gateway/nemo-guardrails/config.yaml and
+# ai-gateway/llm-guard/config.yaml are application config files — they
+# need to be wrapped in ConfigMaps and consumed by Deployment manifests
+# (also missing) before they can be added to `resources:`. Tracked as a
+# follow-up — out of scope for the critical-fixes pass.
