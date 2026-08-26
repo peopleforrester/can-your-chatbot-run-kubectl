@@ -1,5 +1,53 @@
 # Project State — burritbot (Can Your Chatbot Run kubectl?)
 
+## PAUSED — 2026-08-26
+
+**This project is paused by Michael's decision until after DevOpsDays
+Portland (2026-09-08 to 09-10).** The nearer deadline owns attention:
+Portland's deliverable is the Watch It Burn workshop in
+`~/repos/events/Unleash_an_Agent_Watch_It_Burn`, a different and far
+more mature repo. This platform's own delivery is not until
+2026-11-09 to 11-12 (see `presentations/` for the event), so the
+runway is real.
+
+Do not resume work here without Michael saying so.
+
+### State at the pause
+- Branch `staging`, working tree clean, `staging` and `main` both in
+  sync with origin. Nothing unpushed, nothing stashed.
+- 203 static tests green. Zero open Dependabot alerts, zero open PRs.
+- **Nothing has ever run on a cluster.** No GCP resources exist; the
+  Terraform state bucket created in June was deleted in the same
+  session, verified empty.
+- 11 open issues, every one labeled `deferred`.
+
+### The critical path when work resumes
+`#17 → #22 / #23 / #24 → #18 → #20`
+
+1. **#17** swap the dead `kk-community-projects` GCP identity and the
+   `michael@kodekloud.com` ACME email. Michael lost access to that
+   account. Blocks everything below.
+2. **#22, #23, #24** three verified defects that would break a live
+   bring-up. #22 in particular means `terraform apply` fails outright
+   (Dataplane V2 and legacy Calico both enabled), which a green
+   `terraform plan` did NOT catch — plan is client-side, the GKE API
+   rejects the combination only at apply. Do not read a green plan as
+   apply-ready.
+3. **#18** live cluster bring-up.
+4. **#20** the Grafana screenshot for the README needs a live rehearsal.
+
+### Doable any time, needs nothing external
+- **#15** cut a dated release (`v0.1.0-static`)
+- **#21** migrate this file to the lifecycle schema (the SessionStart
+  hook nags every session until it is done)
+
+### Related work that is NOT this repo
+`Unleash_an_Agent_Watch_It_Burn` also contains a working BurritoBot —
+a genuinely independent implementation (Bedrock/EKS/kagent vs this
+repo's Vertex/GKE/NeMo), zero shared file ancestry, and unlike this one
+it has actually run. Cousins, not forks. Context handoff for Portland
+was filed there as issue #73. Do not conflate the two.
+
 ## Verification Method
 Tracker contents are reconciled against actual repo state (file reads,
 `pytest --collect-only`, `git log`) at every transition — not from
